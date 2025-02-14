@@ -1,43 +1,57 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
 export default function Stories() {
   const initialStories = [
-    { name: "lala", image: "/home.png" },
-    { name: "lala", image: "/applestore.png" },
-    { name: "lala", image: "/like.png" },
-    { name: "lala", image: "/applestore.png" },
-    { name: "lala", image: "/ig.png" },
-    { name: "lala", image: "/applestore.png" },
-    { name: "lala", image: "/applestore.png" },
+    { name: "lala", image: "/home.png", color: "from-yellow-400 via-pink-500 to-purple-600" },
+    { name: "lala", image: "/applestore.png", color: "from-yellow-400 via-pink-500 to-purple-600" },
+    { name: "lala", image: "/like.png", color: "from-yellow-400 via-pink-500 to-purple-600" },
+    { name: "lala", image: "/applestore.png", color: "from-yellow-400 via-pink-500 to-purple-600" },
+    { name: "lala", image: "/ig.png", color: "from-yellow-400 via-pink-500 to-purple-600" },
+    { name: "lala", image: "/applestore.png", color: "from-yellow-400 via-pink-500 to-purple-600" },
+    { name: "lala", image: "/applestore.png", color: "from-yellow-400 via-pink-500 to-purple-600" },
   ];
 
   const [stories, setStories] = useState(initialStories);
-  const [bcolors, setBcolors] = useState(
-    Array(initialStories.length).fill("from-yellow-400 via-pink-500 to-purple-600")
-  );
-
   const [showStory, setShowStory] = useState(false);
-  const [activeStory, setActiveStory] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(null);
 
   function handleClick(index) {
     setShowStory(true);
-    setActiveStory(stories[index]);
-
-    setStories((prev) => {
-      const updatedStories = [...prev];
-      const [clickedStory] = updatedStories.splice(index, 1);
-      updatedStories.push(clickedStory);
-      return updatedStories;
-    });
-
-    setBcolors((prev) => {
-      const updatedBcolors = [...prev];
-      const [clickedColor] = updatedBcolors.splice(index, 1);
-      updatedBcolors.push("bg-gray-200");
-      return updatedBcolors;
-    });
+    setActiveIndex(index);
   }
+
+  // Effect to handle story progression
+  useEffect(() => {
+    if (showStory && activeIndex !== null) {
+      const timer = setTimeout(() => {
+        setStories((prevStories) => {
+          const updatedStories = [...prevStories];
+          const [seenStory] = updatedStories.splice(activeIndex, 1);
+          seenStory.color = "bg-gray-200"; // Mark as seen
+          updatedStories.push(seenStory);
+          return updatedStories;
+        });
+
+        // Move to next story or wrap around
+        setActiveIndex((prevIndex) => {
+          if (prevIndex < stories.length - 1) return prevIndex + 1;
+          return 0;
+        });
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [showStory, activeIndex, stories.length]);
+
+  // Effect to close popup when all stories are seen
+  useEffect(() => {
+    const allSeen = stories.every(story => story.color === "bg-gray-200");
+    if (allSeen && showStory) {
+      setShowStory(false);
+      setActiveIndex(null);
+    }
+  }, [stories, showStory]);
 
   return (
     <div>
@@ -50,7 +64,7 @@ export default function Stories() {
               width={100}
               height={100}
               alt="sth"
-              className={`rounded-full object-cover w-16 h-16 p-[2px] bg-gradient-to-r ${bcolors[index]}`}
+              className={`rounded-full w-14 h-14 p-[2px] bg-gradient-to-r ${story.color}`}
             />
             <span>{story.name}</span>
           </button>
@@ -58,11 +72,22 @@ export default function Stories() {
       </div>
 
       {/* Story Popup */}
-      {showStory && activeStory && (
-        <div className="fixed top-0 z-40 left-0 w-screen h-screen bg-black bg-opacity-60 flex items-center justify-center">
+      {showStory && activeIndex !== null && (
+        <div className="fixed z-40 top-0 left-0 w-screen h-screen bg-black bg-opacity-60 flex items-center justify-center">
           <div className="relative">
-            <button className="absolute top-4 right-4 text-white text-2xl" onClick={() => setShowStory(false)}>✖</button>
-            <Image src={activeStory.image} width={300} height={500} alt={activeStory.name} className="w-[300px] h-[500px]" />
+            <button
+              className="absolute top-4 right-4 text-white text-2xl"
+              onClick={() => setShowStory(false)}
+            >
+              ✖
+            </button>
+            <Image
+              src={stories[activeIndex].image}
+              width={300}
+              height={500}
+              alt={stories[activeIndex].name}
+              className="w-[300px] h-[500px]"
+            />
           </div>
         </div>
       )}

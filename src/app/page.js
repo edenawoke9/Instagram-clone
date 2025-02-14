@@ -17,7 +17,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="bg-black text-white flex w-full ">
+    <div className="bg-black text-white flex w-full  h-screen">
       <div className="w-64"><SideNav /></div>
 
       <div className="flex  flex-grow p-6 ">
