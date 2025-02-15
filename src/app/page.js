@@ -17,21 +17,21 @@ export default function Home() {
   ];
 
   return (
-    <div className="bg-black text-white flex w-full  h-screen">
-      <div className="w-64"><SideNav /></div>
+    <div className="bg-black text-white flex w-screen h-screen overflow-auto">
+      <div className="w-64 hidden md:flex"><SideNav /></div>
 
-      <div className="flex  flex-grow p-6 ">
+      <div className="flex-1 flex  p-6 ">
         {/* Stories Section */}
-        <div className="flex flex-col pr-20 pl-20 max-w-fit ">
+        <div className="flex  flex-col md:pr-20 md:pl-20  ">
           <Stories/>
         
 
         {/* Posts Section */}
-        <div className="pl-14 pr-14" >
+        <div className="  flex justify-center" >
           <PostCard />
 
         </div> </div>
-        <div className="flex flex-col flex-1 bg-red h-fit  p-6 text-white">
+        <div className=" flex-col flex-1 bg-red h-fit hidden lg:flex p-6 text-white">
         <div className="flex items-center justify-between">
         <div className="flex items-center">
           <Image src="/profile1.jpg" width={50} height={50} alt="Profile" className="rounded-full" />
@@ -44,7 +44,7 @@ export default function Home() {
       </div>
 
       {/* Suggested Section */}
-      <div className="mt-4">
+      <div className="mt-4  flex-col">
         <div className="flex justify-between text-gray-400 text-sm">
           <p>Suggested for you</p>
           <button className="text-white font-semibold">See All</button>
