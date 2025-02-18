@@ -6,15 +6,11 @@ import { useState } from "react";
 import PostCard from "@/components/post";
 import Stories from "@/components/stories";
 
+import users from "./jsonfiles/user.json"
+
 export default function Home() {
   
-  const users = [
-    { name: "mistir_zz", mutual: "meri06564 + 7 more", img: "/user1.jpg" },
-    { name: "instagram", mutual: "modernsciencex ...", img: "/instagram.jpg", verified: true },
-    { name: "lidet_tesfaye21", mutual: "meri06564 + 23 ...", img: "/user2.jpg" },
-    { name: "ashertade", mutual: "meri06564 + 11 ...", img: "/user3.jpg" },
-    { name: "giftiko_", mutual: "meri06564 + 6 ...", img: "/user4.jpg" },
-  ];
+  
 
   return (
     <div className="bg-black text-white flex w-screen h-screen overflow-auto">
@@ -49,7 +45,7 @@ export default function Home() {
           <p>Suggested for you</p>
           <button className="text-white font-semibold">See All</button>
         </div>
-        {users.map((user, index) => (
+        {users.users.map((user, index) => (
           <div key={index} className="flex items-center justify-between mt-3">
             <div className="flex items-center">
               <Image src={user.img} width={40} height={40} alt={user.name} className="rounded-full" />
