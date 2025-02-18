@@ -3,8 +3,15 @@ import React from "react";
 import Note from "@/components/notes";
 import Search from "@/components/search";
 import { useState } from "react";
+import { Call,VideoCall,Info } from "@mui/icons-material";
+
 
 export default function Message() {
+  const user={
+    "image":"/applestore.png",
+    "name":"eden awoke"
+  
+  }
   const [showSearch, setShowSearch] = useState(false);
 
   return (
@@ -21,6 +28,19 @@ export default function Message() {
       </div>
 
       {/* Right Panel */}
+      <div className="flex-1 flex flex-col">
+      <div className="text-white flex items-center justify-between   m-2 pb-2 border-b border-b-zinc-800"> 
+    <div className="flex gap-2 items-center"><img
+                src={user.image}
+                alt={user.name}
+                className="w-10 h-10 rounded-full object-cover"
+              /> <p>{user.name}</p></div>
+              <div className="flex gap-2">
+                <Call/>
+                <VideoCall/>
+                <Info/>
+              </div>
+              </div>
       <div className="flex-1 flex flex-col justify-center items-center text-center">
         <div className="flex flex-col items-center gap-2">
           <div className="rounded-full border p-3 border-gray-500">
@@ -35,20 +55,18 @@ export default function Message() {
           {/* Modal (Search) Overlay */}
           {showSearch && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-              <div className=" p-2 rounded shadow-lg">
-              <button onClick={() => setShowSearch(false)} className="mt-4 p-2 flex justify-end text-white rounded">
+              <div className=" p-2 rounded shadow-lg relateive">
+              <button onClick={() => setShowSearch(false)} className="w-full  flex justify-end p-2  text-white rounded">
                   x
                 </button>
                 <Search />
-                <button className="bg-blue-500 text-white px-4 py-2 rounded-md mt-2">
-                  Send
-                </button>
+               
                 
               </div>
             </div>
           )}
         </div>
-      </div>
+      </div></div>
     </div>
   );
 }

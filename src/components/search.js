@@ -1,74 +1,120 @@
-import React, { useState } from "react";
-import users from "../app/jsonfiles/user.json";
-import Image from "next/image";
-import { Autocomplete, TextField, Checkbox, Avatar, Chip } from "@mui/material";
+import React, { useState, useMemo, useCallback } from 'react';
+import { Check, X } from 'lucide-react';
+import users from '../app/jsonfiles/user.json';
+import Checkbox from '@mui/material/Checkbox';
+
+// Extract UserChip component for better readability
+const UserChip = ({ user, onRemove }) => (
+  <div className="flex items-center gap-1 bg-zinc-800 text-white px-2 py-1 rounded-full">
+    <img
+      src={user.img}
+      alt={`${user.name} profile`}
+      className="w-5 h-5 rounded-full object-cover"
+      width={20}
+      height={20}
+    />
+    <span className="text-sm">{user.name}</span>
+    <button
+      onClick={onRemove}
+      className="ml-1 hover:text-zinc-400"
+      aria-label={`Remove ${user.name}`}
+    >
+      <X size={14} />
+    </button>
+  </div>
+);
+
+// Memoized UserListItem to prevent unnecessary re-renders
+const UserListItem = React.memo(({ user, isSelected, toggleUser }) => (
+  <label className="flex items-center gap-2 p-2 hover:bg-zinc-800 cursor-pointer rounded-md group">
+    <img
+      src={user.img}
+      alt={`${user.name} profile`}
+      className="w-10 h-10 rounded-full object-cover"
+      width={40}
+      height={40}
+    />
+    <div className="flex-1">
+      <p className="font-semibold text-sm text-white flex items-center">
+        {user.name}
+        {user.verified && <Check size={14} className="text-blue-500 ml-1" />}
+      </p>
+    </div>
+    <Checkbox
+      checked={isSelected}
+      onChange={toggleUser}
+      color="primary"
+      inputProps={{ 'aria-label': `Select ${user.name}` }}
+      sx={{
+        color: '#3b82f6',
+        '&.Mui-checked': {
+          color: '#3b82f6',
+        },
+      }}
+    />
+  </label>
+));
 
 export default function Search() {
   const [selectedUsers, setSelectedUsers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  // Memoize filtered users to prevent recalculating on every render
+  const filteredUsers = useMemo(() => {
+    const searchLower = searchTerm.toLowerCase();
+    return users.users.filter(user => 
+      user.name.toLowerCase().includes(searchLower)
+    );
+  }, [searchTerm]);
+
+  // Memoize toggle function with useCallback
+  const toggleUser = useCallback((user) => {
+    setSelectedUsers(prev => prev.some(u => u.id === user.id)
+      ? prev.filter(u => u.id !== user.id)
+      : [...prev, user]
+    );
+  }, []);
 
   return (
-    <div className="z-40 w-64 bg-black flex flex-col gap-2 rounded-md p-4">
-      <h1 className="text-xl font-semibold border-b border-b-zinc-700 pb-2">New Message</h1>
+    <div className="z-40 w-64 bg-zinc-900 flex flex-col gap-2 rounded-md p-4">
+      <h1 className="text-xl font-semibold text-white border-b border-b-zinc-700 pb-2">
+        New Message
+      </h1>
 
-      {/* Autocomplete Multi-Select Input */}
-      <Autocomplete
-        multiple
-        options={users.users}
-        getOptionLabel={(user) => user.name}
-        value={selectedUsers}
-        onChange={(event, newValue) => setSelectedUsers(newValue)}
-        disableCloseOnSelect
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            variant="standard"
-            placeholder="Search users..."
-            InputProps={{ ...params.InputProps, disableUnderline: true }}
-            sx={{ backgroundColor: "black", color: "white", mt: 1 }}
+      {/* Selected Users */}
+      <div className="flex flex-wrap gap-2">
+        {selectedUsers.map(user => (
+          <UserChip
+            key={user.id}
+            user={user}
+            onRemove={() => toggleUser(user)}
           />
-        )}
-        renderOption={(props, user, { selected }) => (
-          <li {...props} className="flex items-center gap-2 cursor-pointer hover:bg-gray-800 rounded-md px-2 py-1">
-            <Avatar src={user.img} alt={user.name} sx={{ width: 32, height: 32 }} />
-            <span>{user.name}</span>
-            {user.verified && <span className="text-blue-500 ml-1">✔</span>}
-            <Checkbox checked={selected} sx={{ marginLeft: "auto", color: "gray" }} />
-          </li>
-        )}
-        renderTags={(selectedUsers, getTagProps) =>
-          selectedUsers.map((user, index) => (
-            <Chip
-              {...getTagProps({ index })}
-              key={user.name}
-              label={user.name}
-              avatar={<Avatar src={user.img} />}
-              sx={{ backgroundColor: "#1f2937", color: "white" }}
-            />
-          ))
-        }
+        ))}
+      </div>
+
+      {/* Search Input */}
+      <input
+        type="text"
+        placeholder="Search..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="w-full bg-transparent text-white border-none outline-none placeholder-zinc-500"
+        aria-label="Search users"
       />
 
-      {/* Persistent User List */}
-      <div className="bg-black flex flex-col overflow-auto mt-2">
-        {users.users.map((user) => (
-          <label key={user.name} className="flex items-center gap-2 p-2 hover:bg-gray-800 cursor-pointer rounded-md">
-            <Image src={user.img} width={40} height={40} alt={user.name} className="rounded-full" />
-            <div className="ml-3 flex-1">
-              <p className="font-semibold text-sm flex items-center">
-                {user.name} {user.verified && <span className="text-blue-500 ml-1">✔</span>}
-              </p>
-            </div>
-            <Checkbox
-              checked={selectedUsers.includes(user)}
-              onChange={() => {
-                setSelectedUsers((prev) =>
-                  prev.includes(user) ? prev.filter((u) => u !== user) : [...prev, user]
-                );
-              }}
-              sx={{ color: "gray", "&.Mui-checked": { color: "blue" } }}
-            />
-          </label>
+      {/* User List */}
+      <div className="flex flex-col overflow-auto mt-2 max-h-[300px]">
+        {filteredUsers.map(user => (
+          <UserListItem
+            key={user.id}
+            user={user}
+            isSelected={selectedUsers.some(u => u.id === user.id)}
+            toggleUser={() => toggleUser(user)}
+          />
         ))}
+        {filteredUsers.length === 0 && (
+          <p className="text-zinc-500 text-sm p-2">No users found</p>
+        )}
       </div>
     </div>
   );
