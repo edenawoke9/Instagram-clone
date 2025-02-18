@@ -1,9 +1,14 @@
+"use client"
 import React from "react";
 import Note from "@/components/notes";
+import Search from "@/components/search";
+import { useState } from "react";
 
 export default function Message() {
+  const [showSearch, setShowSearch] = useState(false);
+
   return (
-    <div className="flex h-screen bg-black text-white">
+    <div className="relative flex h-screen bg-black text-white">
       {/* Left Panel */}
       <div className="flex flex-col w-1/4 px-4 py-6 border-r border-gray-700">
         <Note />
@@ -25,7 +30,23 @@ export default function Message() {
           </div>
           <h2 className="text-lg font-semibold">Your messages</h2>
           <p className="text-gray-400 text-sm">Send a message to start a chat.</p>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-md mt-2">Send Message</button>
+          <button className="bg-blue-500 text-white px-4 py-2 rounded-md mt-2" onClick={() => setShowSearch(true)}>Send Message</button>
+
+          {/* Modal (Search) Overlay */}
+          {showSearch && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+              <div className=" p-2 rounded shadow-lg">
+              <button onClick={() => setShowSearch(false)} className="mt-4 p-2 flex justify-end text-white rounded">
+                  x
+                </button>
+                <Search />
+                <button className="bg-blue-500 text-white px-4 py-2 rounded-md mt-2">
+                  Send
+                </button>
+                
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

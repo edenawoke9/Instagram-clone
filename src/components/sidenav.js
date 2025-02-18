@@ -23,7 +23,7 @@ export default function SideNav() {
           { icon: <Search />, label: "Search",href:"#" },
           { icon: <Compass />, label: "Explore",href:"#" },
           { icon: <Clapperboard />, label: "Reels",href:"#" },
-          { icon: <Send />, label: "Messages", badge: "2",href:"#" },
+          { icon: <Send />, label: "Messages", badge: "2",href:"/messages" },
           { icon: <Heart />, label: "Notifications",href:"#" },
           { icon: <PlusSquare />, label: "Create",href:"#"},
           { icon: <User />, label: "Profile",href:"#" },
