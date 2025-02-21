@@ -2,6 +2,7 @@ import React, { useState, useMemo, useCallback } from 'react';
 import { Check, X } from 'lucide-react';
 import users from '../app/jsonfiles/user.json';
 import Checkbox from '@mui/material/Checkbox';
+import { useRouter } from 'next/navigation';
 
 // Extract UserChip component for better readability
 const UserChip = ({ user, onRemove }) => (
@@ -56,6 +57,11 @@ const UserListItem = React.memo(({ user, isSelected, toggleUser }) => (
 ));
 
 export default function Search() {
+  const router=useRouter()
+  const handleClick = () => {
+    const value = encodeURIComponent(JSON.stringify(selectedUsers)); // Ensure it's a valid URL string
+    router.push(`/messages?value=${value}`);
+  };
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -76,7 +82,7 @@ export default function Search() {
   }, []);
 
   return (
-    <div className="z-40 w-64 bg-zinc-900 flex flex-col gap-2 rounded-md p-4">
+    <div className="z-40 w-96 bg-zinc-900 flex flex-col gap-2 rounded-md p-4 ">
       <h1 className="text-xl font-semibold text-white border-b border-b-zinc-700 pb-2">
         New Message
       </h1>
@@ -115,6 +121,9 @@ export default function Search() {
         {filteredUsers.length === 0 && (
           <p className="text-zinc-500 text-sm p-2">No users found</p>
         )}
+      </div>
+      <div>
+        <button onClick={handleClick}  className='p-2 pr-8 pl-8 rounded-md bg-blue-600'>Chat</button>
       </div>
     </div>
   );
