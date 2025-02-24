@@ -5,6 +5,7 @@ import Checkbox from '@mui/material/Checkbox';
 import { useRouter } from 'next/navigation';
 
 // Extract UserChip component for better readability
+
 const UserChip = ({ user, onRemove }) => (
   <div className="flex items-center gap-1 bg-zinc-800 text-white px-2 py-1 rounded-full">
     <img
@@ -122,7 +123,7 @@ export default function Search() {
           <p className="text-zinc-500 text-sm p-2">No users found</p>
         )}
       </div>
-      <div>
+      <div className='flex justify-center'>
         <button onClick={handleClick}  className='p-2 pr-8 pl-8 rounded-md bg-blue-600'>Chat</button>
       </div>
     </div>
