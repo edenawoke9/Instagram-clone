@@ -22,7 +22,7 @@ export default function PostCard() {
             </div>
 
             {/* Image */}
-            <div className="relative shadow-inner border-gray-700">
+            <div className="shadow-inner border-gray-700">
                 <Image src="/profile1.jpg" width={400} height={300} alt="Post" className="w-full" />
             </div>
 

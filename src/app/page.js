@@ -14,7 +14,7 @@ export default function Home() {
 
   return (
     <div className="bg-black text-white flex w-screen h-screen overflow-auto">
-      <div className="w-64 hidden md:flex"><SideNav /></div>
+      <div className="  hidden   md:flex"><SideNav  /></div>
 
       <div className="flex-1 flex  p-6 ">
         {/* Stories Section */}
@@ -23,11 +23,11 @@ export default function Home() {
         
 
         {/* Posts Section */}
-        <div className="  flex justify-center" >
+        <div className=" bg-red-200  flex justify-center" >
           <PostCard />
 
         </div> </div>
-        <div className=" flex-col flex-1 bg-red h-fit hidden lg:flex p-6 text-white">
+        <div className=" flex-col flex-1 bg- h-fit hidden lg:flex p-6 text-white">
         <div className="flex items-center justify-between">
         <div className="flex items-center">
           <Image src="/profile1.jpg" width={50} height={50} alt="Profile" className="rounded-full" />
