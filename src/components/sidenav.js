@@ -13,6 +13,10 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { FaInstagram } from "react-icons/fa";
+import Image from "next/image";
+import Link from "next/link";
+import "@fontsource/pacifico"; // Import for global use
+
 
 const drawerWidth = 240;
 
@@ -66,12 +70,19 @@ export default function MiniDrawer({value}) {
   };
 
   return (
-    <div className="bg-black min-h-screen hidden md:flex ">
+    <div className="bg-black  min-h-screen hidden md:flex md:flex-col ">
+     
      
 
-      <Drawer variant="permanent" open={open} className="flex pl-20">
-        <Box className=" text-white flex  mt-10">
-          {open ? <Typography variant="h6">Instagram</Typography> : <FaInstagram />}
+      <Drawer variant="permanent" open={open} >
+      <Box className="text-white flex pl-4 mt-10 font-pacifico  ">
+          {open ? (
+            <Typography variant="h6" className="font-pacifico">
+              Instagram
+            </Typography>
+          ) : (
+            <FaInstagram className="text-2xl"/>
+          )}
         </Box>
         
 
@@ -80,7 +91,7 @@ export default function MiniDrawer({value}) {
             { icon: <Home />, label: "Home", href: "/" },
             { icon: <Search />, label: "Search", href: "#" },
             { icon: <Compass />, label: "Explore", href: "/explore" },
-            { icon: <Clapperboard />, label: "Reels", href: "#" },
+            { icon: <Clapperboard />, label: "Reels", href: "/reels" },
             { icon: <Send />, label: "Messages", badge: "2", href: "/messages" },
             { 
               icon: <Heart />, 
@@ -90,8 +101,7 @@ export default function MiniDrawer({value}) {
             },
             { icon: <PlusSquare />, label: "Create", href: "#" },
             { icon: <User />, label: "Profile", href: "#" },
-            { icon: <MessageCircle />, label: "Threads", badge: "9+", href: "/messages" },
-            { icon: <Menu />, label: "More", href: "#" },
+           
           ].map(({ icon, label, href, onClick }, index) => (
             <ListItem key={index} disablePadding>
               <ListItemButton
@@ -105,22 +115,30 @@ export default function MiniDrawer({value}) {
             </ListItem>
           ))}
         </List>
-      </Drawer>
+        <div className="h-full flex pl-4 pb-10  text-white items-end">
+          <div className="flext flex-col gap-4">
+           <Link href="https://www.threads.net/?hl=en" className="flex"><Image src="/threads.png" width={24} height={24} alt="threads"/> <span>Threads</span></Link > 
+           <div className="flex"><Menu/> <span>More</span></div>
 
-      {/* Side menu - conditionally rendered */}
+          </div>
+        </div>
+      </Drawer>
+     
+
+
+     
       {sideMenuOpen && (
-        <div className=" inset-0 bg-black bg-opacity-50 z-10">
-          <Box className="absolute  h-screen bg-black text-white">
-            <Typography variant="h6">Notification Side Menu</Typography>
-            <List>
+        <div className="  bg-black bg-opacity-50 z-10">
+          <Box className="absolute left-20  h-screen p-2 bg-black text-white">
+          <button onClick={() => setSideMenuOpen(false)} className="mt-4 text-xl font-bold pr-4 w-full flex justify-end">X</button>
+            <Typography className="text-2xl font-semibold">Notification Side Menu</Typography>
+            <List className="flex flex-col gap-2">
+              <ListItem >
+                <p className="text-xl font-normal"> this is Notification</p>              </ListItem>
               <ListItem>
-                <ListItemText primary="Notification 1" />
-              </ListItem>
-              <ListItem>
-                <ListItemText primary="Notification 2" />
-              </ListItem>
+                <p className="text-xl font-normal"> this is Notification</p>              </ListItem>
             </List>
-            <button onClick={() => setSideMenuOpen(false)} className="mt-4 text-red-500">Close</button>
+            
           </Box>
         </div>
       )}

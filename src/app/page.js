@@ -46,7 +46,7 @@ export default function Home() {
           <p>Suggested for you</p>
           <button className="text-white font-semibold">See All</button>
         </div>
-        {users.users.map((user, index) => (
+        {users.map((user, index) => (
           <div key={index} className="flex items-center justify-between mt-3">
             <div className="flex items-center">
               <Image src={user.img} width={40} height={40} alt={user.name} className="rounded-full" />
