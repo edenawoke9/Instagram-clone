@@ -1,12 +1,13 @@
 'use client';
 import React from "react";
-import SideNav from "@/components/sidenav";
+
 import Image from "next/image";
 import { useState } from "react";
 import PostCard from "@/components/post";
 import Stories from "@/components/stories";
 
 import users from "./jsonfiles/user.json"
+import MiniDrawer from "@/components/sidenav";
 
 export default function Home() {
   
@@ -14,16 +15,16 @@ export default function Home() {
 
   return (
     <div className="bg-black text-white flex w-screen h-screen overflow-auto">
-      <div className="  hidden   md:flex"><SideNav  /></div>
+      <div className="  hidden   md:flex"><MiniDrawer value="true"  /></div>
 
       <div className="flex-1 flex  p-6 ">
-        {/* Stories Section */}
+        
         <div className="flex  flex-col md:pr-20 md:pl-20  ">
           <Stories/>
         
 
-        {/* Posts Section */}
-        <div className=" bg-red-200  flex justify-center" >
+        
+        <div className=" flex justify-center" >
           <PostCard />
 
         </div> </div>
