@@ -1,8 +1,7 @@
-{ "users":[
-    { "name": "mistir_zz"," mutual": "meri06564 + 7 more"," img": "/user1.jpg" },
-    { "name": "instagram"," mutual": "modernsciencex ..."," img": "/instagram.jpg", "verified": true },
-    { "name": "lidet_tesfaye21"," mutual": "meri06564 + 23 ..."," img": "/user2.jpg" },
-    { "name": "ashertade"," mutual": "meri06564 + 11 ..."," img": "/user3.jpg" },
-    { "name": "giftiko_"," mutual": "meri06564 + 6 ..."," img": "/user4.jpg" }
+ [
+    { "name": "mistir_zz"," mutual": "meri06564 + 7 more","img": "/profile1.jpg" },
+    { "name": "instagram"," mutual": "modernsciencex ...","img": "/profile1.jpg", "verified": true },
+    { "name": "lidet_tesfaye21"," mutual": "meri06564 + 23 ...","img": "/profile1.jpg" },
+    { "name": "ashertade"," mutual": "meri06564 + 11 ...","img": "/profile1.jpg" },
+    { "name": "giftiko_"," mutual": "meri06564 + 6 ...","img": "/profile1.jpg" }
   ]
-}
