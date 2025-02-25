@@ -2,13 +2,14 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
-import SideNav from '@/components/sidenav';
+
+import MiniDrawer from '@/components/sidenav';
 
 export default function MasonryImageList() {
   return (
     <div className='w-screen flex'>
       {/* SideNav with fixed width */}
-      <SideNav/>
+      <MiniDrawer value="true"/>
      
      
 

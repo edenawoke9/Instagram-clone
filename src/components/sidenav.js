@@ -12,6 +12,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import { FaInstagram } from "react-icons/fa";
 
 const drawerWidth = 240;
 
@@ -54,41 +55,50 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 }));
 
-export default function MiniDrawer() {
+export default function MiniDrawer({value}) {
   const theme = useTheme();
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(value);
+  const [sideMenuOpen, setSideMenuOpen] = useState(false); // State to control side menu visibility
 
-  const handleClick = (href) => {
-    if (href === "/messages") {
-      setOpen(false);
-    }
+  const handleNotificationClick = () => {
+    setSideMenuOpen(!sideMenuOpen); 
+    setOpen(false)// Toggle side menu visibility
   };
 
   return (
-    <div className="bg-black min-h-screen">
-      <CssBaseline />
+    <div className="bg-black min-h-screen hidden md:flex ">
+     
 
-      <Drawer variant="permanent" open={open}>
-        <Box className="p-4 text-white">
-          <Typography variant="h6">Instagram</Typography>
+      <Drawer variant="permanent" open={open} className="flex pl-20">
+        <Box className=" text-white flex  mt-10">
+          {open ? <Typography variant="h6">Instagram</Typography> : <FaInstagram />}
         </Box>
-        <Divider className="bg-gray-700" />
+        
 
         <List>
           {[
-            { icon: <Home />, label: "Home", href: "#" },
+            { icon: <Home />, label: "Home", href: "/" },
             { icon: <Search />, label: "Search", href: "#" },
-            { icon: <Compass />, label: "Explore", href: "#" },
+            { icon: <Compass />, label: "Explore", href: "/explore" },
             { icon: <Clapperboard />, label: "Reels", href: "#" },
             { icon: <Send />, label: "Messages", badge: "2", href: "/messages" },
-            { icon: <Heart />, label: "Notifications", href: "#" },
+            { 
+              icon: <Heart />, 
+              label: "Notifications", 
+              href: "#", 
+              onClick: handleNotificationClick, // Trigger side menu on click
+            },
             { icon: <PlusSquare />, label: "Create", href: "#" },
             { icon: <User />, label: "Profile", href: "#" },
             { icon: <MessageCircle />, label: "Threads", badge: "9+", href: "/messages" },
             { icon: <Menu />, label: "More", href: "#" },
-          ].map(({ icon, label, href }, index) => (
+          ].map(({ icon, label, href, onClick }, index) => (
             <ListItem key={index} disablePadding>
-              <ListItemButton onClick={() => handleClick(href)} className="hover:bg-gray-800 transition duration-300">
+              <ListItemButton
+                href={href}
+                onClick={onClick ? onClick : () => {}}
+                className="hover:bg-gray-800 transition duration-300"
+              >
                 <ListItemIcon className="text-white">{icon}</ListItemIcon>
                 <ListItemText primary={label} className="text-white" />
               </ListItemButton>
@@ -96,6 +106,24 @@ export default function MiniDrawer() {
           ))}
         </List>
       </Drawer>
+
+      {/* Side menu - conditionally rendered */}
+      {sideMenuOpen && (
+        <div className=" inset-0 bg-black bg-opacity-50 z-10">
+          <Box className="absolute  h-screen bg-black text-white">
+            <Typography variant="h6">Notification Side Menu</Typography>
+            <List>
+              <ListItem>
+                <ListItemText primary="Notification 1" />
+              </ListItem>
+              <ListItem>
+                <ListItemText primary="Notification 2" />
+              </ListItem>
+            </List>
+            <button onClick={() => setSideMenuOpen(false)} className="mt-4 text-red-500">Close</button>
+          </Box>
+        </div>
+      )}
     </div>
   );
 }
