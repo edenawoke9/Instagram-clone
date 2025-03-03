@@ -1,10 +1,10 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { PhoneCallIcon as Call, Info, Send, Video, SearchIcon } from "lucide-react"
+import { PhoneCallIcon as Call, Info, Send, Video, SearchIcon, Sidebar } from "lucide-react"
 import { useSearchParams, useRouter } from "next/navigation"
 import Search from "@/components/search"
-import MiniDrawer from "@/components/sidenav"
+import Sidenav from "@/components/sidenav"
 
 const userList = [
   { id: 1, name: "Alice Johnson", image: "/placeholder.svg?height=40&width=40" },
@@ -58,7 +58,7 @@ export default function Message() {
   return (
     <div className="relative flex h-screen bg-zinc-900 text-white">
       {/* Left Panel */}
-      <MiniDrawer value="false"/>
+      <Sidenav value={false}/>
 
       <div className="flex flex-col w-1/4 px-4 py-6 border-r border-zinc-700">
         <div className="mb-4">

@@ -163,7 +163,7 @@ function Share({ open, onClose }) {
           ))}
         </div>
         <Divider className="my-4" />
-        <Link/>
+        
         <div className="flex gap-4">
           {socialMedia.map((media, index) => (
             <div className="flex flex-col items-center" key={index}>
