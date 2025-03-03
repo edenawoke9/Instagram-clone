@@ -69,7 +69,7 @@ export default function Search() {
   // Memoize filtered users to prevent recalculating on every render
   const filteredUsers = useMemo(() => {
     const searchLower = searchTerm.toLowerCase();
-    return users.users.filter(user => 
+    return users.filter(user => 
       user.name.toLowerCase().includes(searchLower)
     );
   }, [searchTerm]);
