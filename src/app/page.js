@@ -7,7 +7,8 @@ import PostCard from "@/components/post";
 import Stories from "@/components/stories";
 
 import users from "./jsonfiles/user.json"
-import MiniDrawer from "@/components/sidenav";
+import Sidenav from "@/components/sidenav";
+import MobileNav from "@/components/mobileNav";
 
 export default function Home() {
   
@@ -15,7 +16,8 @@ export default function Home() {
 
   return (
     <div className="bg-black text-white flex w-screen h-screen overflow-auto">
-      <div className="  hidden   md:flex"><MiniDrawer value="true"  /></div>
+      <div className="  hidden   md:flex"><Sidenav value="true"  /></div>
+      
 
       <div className="flex-1 flex  p-6 ">
         

@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Sidenav from '@/components/sidenav';
 // Profile data
 const profileData = {
-  username: 'L_ittl_e_wolf',
+  username: '@L_ittl_e_wolf',
   displayName: 'Eden Awoke',
   followers: 184,
   following: 127,
@@ -69,47 +69,46 @@ export default function Profile() {
       <div className="w-full max-w-[600px] mx-auto p-4 relative">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
-          <div className="absolute top-4 left-4 py-2 px-4 bg-[#111] border border-gray-700 rounded-lg text-gray-400">Note...</div>
-          <div className="text-2xl font-bold">{profileData.username}</div>
+          
+          <div className="text-lg md:text-xl mr-2   font-bold">{profileData.username}</div>
           <div className="flex gap-4 ">
-            <button className="py-2 px-4 rounded-lg  bg-zinc-700  text-white font-medium">Edit profile</button>
-            <button className="py-2 px-4 rounded-lg  bg-zinc-700  text-white font-medium">View archive</button>
-            <button className="py-2 px-4 rounded-lg  bg-zinc-700  text-white font-medium"><i className="fas fa-cog"></i></button>
+            <button className=" px-4 rounded-lg  bg-zinc-700  text-white font-medium">Edit profile</button>
+            <button className=" px-4 rounded-lg  bg-zinc-700  text-white font-medium">View archive</button>
+            <button className=" px-4 rounded-lg  bg-zinc-700  text-white font-medium"><i className="fas fa-cog"></i></button>
           </div>
         </div>
 
         {/* Profile Info */}
-        <div className="flex items-center mb-6">
-          <div className="w-[100px] h-[100px] rounded-full overflow-hidden mr-6 relative">
+        <div className="flex gap-6 items-center mb-6">
+          <div className=" overflow-hidden mr-6 ">
+          <div className="   px-2 bg-[#111] border border-gray-700 rounded-lg text-gray-400">Note...</div>
+          <div className=' rounded-full m-4 '>
             <Image 
               src={profileData.profilePicture} 
-              width={100} 
-              height={100}
+              width={80} 
+              height={80}
               alt="Profile picture" 
              
               style={{ objectFit: 'cover', width: '100%', height: '100%' }}
-            />
+              className=''
+            /></div>
           </div>
-          <div className="profile-details">
-            <div className="flex justify-between items-center gap-4 mb-6 text-center">
+          <div className="flex-col flex flex-wrap">
+            <div className="flex flex-wrap justify-between items-center gap-2 md:gap-4 mb-4 text-center">
               <div className=" flex-1 flex gap-2 ">
-                <div className="font-bold text-xl">{profileData.posts}</div>
+                <div className="font-bold text-lg md:text-xl">{profileData.posts}</div>
                 <div>posts</div>
               </div>
               <div className=" flex-1 flex gap-2">
-                <div className="font-bold text-xl">{profileData.followers}</div>
+                <div className="font-bold text-lg md:text-xl">{profileData.followers}</div>
                 <div>followers</div>
               </div>
               <div className=" flex-1 flex gap-2">
-                <div className="font-bold text-xl">{profileData.following}</div>
+                <div className="font-bold text-lg md:text-xl">{profileData.following}</div>
                 <div>following</div>
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Bio Section */}
-        <div className="mb-6">
+            <div className="mb-6">
           <h2 className="text-xl mb-2">{profileData.displayName}</h2>
           <div className="flex items-center text-gray-400 mb-2">
             <i className="fas fa-at mr-2"></i> {profileData.username}
@@ -117,6 +116,14 @@ export default function Profile() {
           <p className="text-gray-300 mb-2">{profileData.bio.quote}</p>
           <p className="text-gray-300 mb-2">{profileData.bio.description}</p>
         </div>
+          </div>
+        </div>
+        <button className="  mb-2 w-[60px] h-[60px] rounded-full bg-[#111] border border-gray-700 text-white flex items-center justify-center text-2xl cursor-pointer shadow-lg">
+          <i className="fas fa-plus"></i>
+        </button>
+
+        {/* Bio Section */}
+        
 
         {/* Tabs */}
         <div className="flex justify-around border-t border-b border-gray-700 mb-6">
@@ -146,9 +153,7 @@ export default function Profile() {
         </div>
 
         {/* New Post Button */}
-        <button className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[60px] h-[60px] rounded-full bg-[#111] border border-gray-700 text-white flex items-center justify-center text-2xl cursor-pointer shadow-lg">
-          <i className="fas fa-plus"></i>
-        </button>
+        
       </div>
     </div>
   );

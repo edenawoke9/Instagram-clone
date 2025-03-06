@@ -11,6 +11,7 @@ import users from "../jsonfiles/user.json"
 import Checkbox from '@mui/material/Checkbox';
 import { useRouter } from 'next/navigation';
 
+
 const UserChip = ({ user, onRemove }) => (
     <div className="flex items-center gap-1 bg-zinc-800 text-white px-2 py-1 rounded-full">
         <img
@@ -32,8 +33,8 @@ const UserChip = ({ user, onRemove }) => (
 );
 
 // Memoized UserListItem to prevent unnecessary re-renders
-const UserListItem = React.memo(({ user, isSelected, toggleUser }) => (
-    <label className="flex items-center gap-2 p-2 hover:bg-zinc-800 cursor-pointer rounded-md group">
+const UserListItem = React.memo(({ user, isSelected, toggleUser ,onClick}) => (
+    <button className="flex items-center gap-2 p-2 hover:bg-zinc-800 cursor-pointer rounded-md group" onClick={onClick}>
         <img
             src={user.img}
             alt={`${user.name} profile`}
@@ -51,7 +52,7 @@ const UserListItem = React.memo(({ user, isSelected, toggleUser }) => (
             checked={isSelected}
             onChange={toggleUser}
             color="primary"
-            inputProps={{ 'aria-label': `Select ${user.name}` }}
+            inputProps={{ 'aria-button': `Select ${user.name}` }}
             sx={{
                 color: '#3b82f6',
                 '&.Mui-checked': {
@@ -59,14 +60,19 @@ const UserListItem = React.memo(({ user, isSelected, toggleUser }) => (
                 },
             }}
         /> */}
-    </label>
+    </button>
 ));
 
 
 
 export default function Searchnav() {
+   const router=useRouter()
+   
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const handleSearchClick= ()=>{
+        router.push("/profile")
+    }
 
     // Memoize filtered users to prevent recalculating on every render
     const filteredUsers = useMemo(() => {
@@ -151,6 +157,7 @@ export default function Searchnav() {
                                                     user={user}
                                                     isSelected={selectedUsers.some(u => u.id === user.id)}
                                                     toggleUser={() => toggleUser(user)}
+                                                    onClick={handleSearchClick}
                                                 />
                                             ))}
                                             {filteredUsers.length === 0 && (
