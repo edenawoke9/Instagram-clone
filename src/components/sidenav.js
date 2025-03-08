@@ -58,7 +58,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 // Navigation items array
 const navItems = [
   { icon: <Home />, label: "Home", href: "/" },
-  { icon: <Search />, label: "Search", href: "/search" },
+  { icon: <Search />, label: "Search", href: "/" },
   { icon: <Compass />, label: "Explore", href: "/explore" },
   { icon: <Clapperboard />, label: "Reels", href: "/reels" },
   { icon: <Send />, label: "Messages", badge: "2", href: "/messages" },

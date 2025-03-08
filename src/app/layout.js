@@ -24,8 +24,9 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <div className="flex md:hidden"><MobileNav/></div>
       </body>
-      <div className="flex md:hidden"><MobileNav/></div>
+     
     </html>
   );
 }

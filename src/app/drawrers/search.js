@@ -7,9 +7,20 @@ import Sidenav from '@/components/sidenav'
 import Image from 'next/image'
 import React, {  useMemo, useCallback } from 'react';
 import { Check, X } from 'lucide-react';
-import users from "../jsonfiles/user.json"
+import Users from '../jsonfiles/user'
 import Checkbox from '@mui/material/Checkbox';
 import { useRouter } from 'next/navigation';
+
+const [users, setUsers] = useState([]);
+
+useEffect(() => {
+    async function fetchUsers() {
+        const data = await Users(); 
+        if (data) setUsers(data);
+    }
+    fetchUsers();
+}, []);
+
 
 
 const UserChip = ({ user, onRemove }) => (

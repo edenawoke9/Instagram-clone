@@ -11,7 +11,7 @@ export default function Login() {
     const [error,setError]=useState("")
     const [loading,setLoading]=useState("Log In")
     async function handleFormSubmit(event) {
-      event.preventDefault(); // Prevent the default form submission
+      event.preventDefault(); 
       setLoading("Logging In...");
       setError("");
     
@@ -29,8 +29,10 @@ export default function Login() {
         });
     
         const data = await response.json();
+        const status=false
     
         if (response.ok) {
+          document.cookie = "status=true; path=/";
           router.push("/");
         } else {
           console.error("API returned an error:", data);
