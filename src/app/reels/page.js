@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import MiniDrawer from '@/components/sidenav';
 import Box from '@mui/joy/Box';
 import Card from '@mui/joy/Card';
@@ -9,7 +9,7 @@ import Typography from '@mui/joy/Typography';
 import { Heart, MessageCircle, Send, Bookmark } from 'lucide-react';
 import { Modal, Sheet, ModalClose } from '@mui/joy';
 import { Divider } from '@mui/material';
-import users from '../jsonfiles/user.js';
+import Users from '../jsonfiles/user.js';
 import Image from 'next/image';
 import { useMemo } from 'react';
 import { Link } from 'lucide-react';
@@ -97,24 +97,25 @@ export default function Reels() {
 
 function Share({ open, onClose }) {
   const [searchTerm, setSearchTerm] = useState("");
+  const [users, setUsers] = useState([]);
 
-  
+  useEffect(() => {
+    async function fetchUsers() {
+      try {
+        const response = await Users()
+        setUsers(response);
+      } catch (error) {
+        console.error("Error loading users:", error);
+      }
+    }
+    fetchUsers();
+  }, []);
 
-  const socialMedia = [
-    { name: "Facebook", icon: "/facebook-logo.png" },
-    { name: "Messenger", icon: "/messenger.png" },
-    { name: "WhatsApp", icon: "/whatsapp.png" },
-    { name: "Email", icon: "/email.png" },
-    { name: "Threads", icon: "/threads.png" },
-  ];
-
-  // Memoize filtered users to prevent recalculating on every render
+  // Memoized search
   const filteredUsers = useMemo(() => {
     const searchLower = searchTerm.toLowerCase();
-    return users.filter(user => 
-      user.name.toLowerCase().includes(searchLower)
-    );
-  }, [searchTerm]);
+    return users.filter(user => user.name && user.name.toLowerCase().includes(searchLower));
+  }, [searchTerm, users]);
 
   return (
     <Modal
@@ -130,13 +131,7 @@ function Share({ open, onClose }) {
         sx={{ maxWidth: 500, borderRadius: 'md', p: 3, boxShadow: 'lg' }}
       >
         <ModalClose variant="plain" sx={{ m: 1 }} />
-        <Typography
-          component="h2"
-          id="modal-title"
-          level="h4"
-          textColor="inherit"
-          sx={{ fontWeight: 'lg', mb: 1 }}
-        >
+        <Typography component="h2" id="modal-title" level="h4" textColor="inherit" sx={{ fontWeight: 'lg', mb: 1 }}>
           Share
         </Typography>
         <Divider />
@@ -152,7 +147,7 @@ function Share({ open, onClose }) {
           {filteredUsers.map((user, index) => (
             <div className="flex flex-col items-center" key={index}>
               <Image
-                src={user.img}
+                src={user.image}
                 alt={user.name}
                 width={64}
                 height={64}
@@ -162,27 +157,7 @@ function Share({ open, onClose }) {
             </div>
           ))}
         </div>
-        <Divider className="my-4" />
-        
-        <div className="flex gap-4">
-          {socialMedia.map((media, index) => (
-            <div className="flex flex-col items-center" key={index}>
-              <Image
-                src={media.icon}
-                alt={media.name}
-                width={32}
-                height={32}
-                className='bg-white rounded-full'
-              />
-              <p className="mt-2 text-sm">{media.name}</p>
-            </div>
-          ))}
-
-        </div>
-        <button className="mt-4 text-blue-500">Copy link</button>
       </Sheet>
     </Modal>
   );
 }
-
-

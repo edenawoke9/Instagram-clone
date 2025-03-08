@@ -1,32 +1,20 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { Dialog, DialogBackdrop, DialogPanel, DialogTitle, TransitionChild } from '@headlessui/react'
-import { XMarkIcon } from '@heroicons/react/24/outline'
-import Sidenav from '@/components/sidenav'
-import Image from 'next/image'
-import React, {  useMemo, useCallback } from 'react';
+import { useState, useEffect } from 'react';
+import { Dialog, DialogBackdrop, DialogPanel, DialogTitle, TransitionChild } from '@headlessui/react';
+import { XMarkIcon } from '@heroicons/react/24/outline';
+import Sidenav from '@/components/sidenav';
+import Image from 'next/image';
+import React, { useMemo, useCallback } from 'react';
 import { Check, X } from 'lucide-react';
-import Users from '../jsonfiles/user'
+import Users from '../jsonfiles/user';
 import Checkbox from '@mui/material/Checkbox';
 import { useRouter } from 'next/navigation';
-
-const [users, setUsers] = useState([]);
-
-useEffect(() => {
-    async function fetchUsers() {
-        const data = await Users(); 
-        if (data) setUsers(data);
-    }
-    fetchUsers();
-}, []);
-
-
 
 const UserChip = ({ user, onRemove }) => (
     <div className="flex items-center gap-1 bg-zinc-800 text-white px-2 py-1 rounded-full">
         <img
-            src={user.img}
+            src={user.image}
             alt={`${user.name} profile`}
             className="w-5 h-5 rounded-full object-cover"
             width={20}
@@ -44,10 +32,10 @@ const UserChip = ({ user, onRemove }) => (
 );
 
 // Memoized UserListItem to prevent unnecessary re-renders
-const UserListItem = React.memo(({ user, isSelected, toggleUser ,onClick}) => (
+const UserListItem = React.memo(({ user, isSelected, toggleUser, onClick }) => (
     <button className="flex items-center gap-2 p-2 hover:bg-zinc-800 cursor-pointer rounded-md group" onClick={onClick}>
         <img
-            src={user.img}
+            src={user.image}
             alt={`${user.name} profile`}
             className="w-10 h-10 rounded-full object-cover"
             width={40}
@@ -59,39 +47,44 @@ const UserListItem = React.memo(({ user, isSelected, toggleUser ,onClick}) => (
                 {user.verified && <Check size={14} className="text-blue-500 ml-1" />}
             </p>
         </div>
-        {/* <Checkbox
-            checked={isSelected}
-            onChange={toggleUser}
-            color="primary"
-            inputProps={{ 'aria-button': `Select ${user.name}` }}
-            sx={{
-                color: '#3b82f6',
-                '&.Mui-checked': {
-                    color: '#3b82f6',
-                },
-            }}
-        /> */}
     </button>
 ));
 
-
-
 export default function Searchnav() {
-   const router=useRouter()
-   
+    const [users, setUsers] = useState([]);
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
-    const handleSearchClick= ()=>{
-        router.push("/profile")
-    }
+    const router = useRouter();
+    const [open, setOpen] = useState(true);
+
+    // Fetch users on component mount
+    useEffect(() => {
+        async function fetchUsers() {
+            try {
+                const data = await Users(); // Fetch users from the API
+                console.log('Fetched users:', data); // Debugging: Log fetched data
+                if (data) {
+                    setUsers(data); // Update state with fetched users
+                }
+            } catch (error) {
+                console.error('Error fetching users:', error); // Debugging: Log errors
+            }
+        }
+        fetchUsers();
+    }, []);
+
+    // Handle search click
+    const handleSearchClick = () => {
+        router.push('/profile');
+    };
 
     // Memoize filtered users to prevent recalculating on every render
     const filteredUsers = useMemo(() => {
         const searchLower = searchTerm.toLowerCase();
         return users.filter(user =>
-            user.name.toLowerCase().includes(searchLower)
+           user.name && user.name.toLowerCase().includes(searchLower)
         );
-    }, [searchTerm]);
+    }, [searchTerm, users]);
 
     // Memoize toggle function with useCallback
     const toggleUser = useCallback((user) => {
@@ -100,22 +93,21 @@ export default function Searchnav() {
             : [...prev, user]
         );
     }, []);
-    const [open, setOpen] = useState(true)
 
     return (
         <Dialog open={open} onClose={setOpen} className="relative z-50">
             <DialogBackdrop
                 transition
-                className=" text-white transition-opacity duration-500 ease-in-out data-closed:opacity-0"
+                className="text-white transition-opacity duration-500 ease-in-out data-closed:opacity-0"
             />
 
-            <div className="   overflow-hidden">
-                <div className="absolute flex  overflow-hidden">
+            <div className="overflow-hidden">
+                <div className="absolute flex overflow-hidden">
                     <Sidenav value={false} />
-                    <div className="pointer-events-none fixed inset-y-0  flex max-w-full ">
+                    <div className="pointer-events-none fixed inset-y-0 flex max-w-full">
                         <DialogPanel
                             transition
-                            className="pointer-events-auto relative w-screen  max-w-md transform transition duration-500 ease-in-out data-closed:translate-x-full sm:duration-700"
+                            className="pointer-events-auto relative w-screen max-w-md transform transition duration-500 ease-in-out data-closed:translate-x-full sm:duration-700"
                         >
                             <TransitionChild>
                                 <div className="absolute top-0 right-0 ml-8 flex pt-4 pr-2 duration-500 ease-in-out data-closed:opacity-0 sm:-ml-10 sm:pr-4">
@@ -130,13 +122,13 @@ export default function Searchnav() {
                                     </button>
                                 </div>
                             </TransitionChild>
-                            <div className="flex bg-black pl-20 h-full flex-col mt-10 px-6 overflow-y-scroll z-50  shadow-xl">
+                            <div className="flex bg-black pl-20 h-full flex-col mt-10 px-6 overflow-y-scroll z-50 shadow-xl">
                                 <div className="px-4 sm:px-6">
-                                    <DialogTitle className="text-2xl flex justify-start  font-semibold ">Search</DialogTitle>
+                                    <DialogTitle className="text-2xl flex justify-start font-semibold">Search</DialogTitle>
                                 </div>
                                 <div className="mt-6 text-lg px-4 sm:px-6">
-                                    <div className="  flex flex-col gap-2 rounded-md  ">
-                                    <input
+                                    <div className="flex flex-col gap-2 rounded-md">
+                                        <input
                                             type="text"
                                             placeholder="Search..."
                                             value={searchTerm}
@@ -145,23 +137,7 @@ export default function Searchnav() {
                                             aria-label="Search users"
                                         />
 
-
-                                        
-                                        {/* <div className="flex flex-wrap gap-2">
-                                            {selectedUsers.map(user => (
-                                                <UserChip
-                                                    key={user.id}
-                                                    user={user}
-                                                    onRemove={() => toggleUser(user)}
-                                                />
-                                            ))}
-                                        </div> */}
-
-                                        
-                                        
-
-                                        
-                                        <div className="flex flex-col overflow-auto mt-2 ">
+                                        <div className="flex flex-col overflow-auto mt-2">
                                             {filteredUsers.map(user => (
                                                 <UserListItem
                                                     key={user.id}
@@ -175,9 +151,7 @@ export default function Searchnav() {
                                                 <p className="text-zinc-500 text-sm p-2">No users found</p>
                                             )}
                                         </div>
-
                                     </div>
-
                                 </div>
                             </div>
                         </DialogPanel>
@@ -185,10 +159,5 @@ export default function Searchnav() {
                 </div>
             </div>
         </Dialog>
-    )
+    );
 }
-
-// Extract UserChip component for better readability
-
-
-

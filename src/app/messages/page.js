@@ -74,9 +74,9 @@ export default function Message() {
           </div>
         </div>
         <div className="flex-1 overflow-y-auto">
-          {filteredUsers.map((user) => (
+          {filteredUsers.map((user,index) => (
             <div
-              key={user.id}
+              key={user.id?? index}
               onClick={() => startChat(user)}
               className={`flex items-center space-x-3 p-3 rounded-md cursor-pointer ${
                 selectedUser?.id === user.id ? "bg-zinc-700" : "hover:bg-zinc-800"

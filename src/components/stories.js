@@ -1,18 +1,22 @@
+'use client';
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import Users from "@/app/jsonfiles/user";
 
 export default function Stories() {
-  const initialStories = [
-    { name: "lala", image: "/home.png", color: "from-yellow-400 via-pink-500 to-purple-600" },
-    { name: "lala", image: "/applestore.png", color: "from-yellow-400 via-pink-500 to-purple-600" },
-    { name: "lala", image: "/like.png", color: "from-yellow-400 via-pink-500 to-purple-600" },
-    { name: "lala", image: "/applestore.png", color: "from-yellow-400 via-pink-500 to-purple-600" },
-    { name: "lala", image: "/ig.png", color: "from-yellow-400 via-pink-500 to-purple-600" },
-    { name: "lala", image: "/applestore.png", color: "from-yellow-400 via-pink-500 to-purple-600" },
-    { name: "lala", image: "/applestore.png", color: "from-yellow-400 via-pink-500 to-purple-600" },
-  ];
+ 
+  const [stories, setStories] = useState([]);
+  useEffect(()=>{
+    async function fetchUsers(){
+      const usersData= await Users()
+      setStories(usersData.slice(15,usersData.length))
 
-  const [stories, setStories] = useState(initialStories);
+    }
+    fetchUsers()
+
+  },[Users])
+
+ 
   const [showStory, setShowStory] = useState(false);
   const [activeIndex, setActiveIndex] = useState(null);
 
@@ -56,7 +60,7 @@ export default function Stories() {
   return (
     <div>
       {/* Story List */}
-      <div className="p-4 rounded-md mb-4 flex gap-2 pr-6 pl-6">
+      <div className="p-4 rounded-md mb-4 overflow-auto flex flex-none max-w-[600px] gap-2 pr-6 pl-6">
         {stories.map((story, index) => (
           <button key={index} onClick={() => handleClick(index)}>
             <Image

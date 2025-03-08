@@ -1,25 +1,28 @@
-'use client';
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { Check, X } from 'lucide-react';
-import usersData from '../app/jsonfiles/user'; 
+import Users from '../app/jsonfiles/user'; 
 import Checkbox from '@mui/material/Checkbox';
 import { useRouter } from 'next/navigation';
 
 export default function Search() {
-  const [users, setUsers] = useState([]);
+
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const router = useRouter();
+  const [users,setUsers] = useState([]);
 
-  
   useEffect(() => {
-    setUsers(usersData); 
-  }, []);
+    async function fetchUsers(){
+      const userData = await Users();
+      setUsers(userData);
+    }
+    fetchUsers();
+  }, [Users]);
 
   const UserChip = ({ user, onRemove }) => (
     <div className="flex items-center gap-1 bg-zinc-800 text-white px-2 py-1 rounded-full">
       <img
-        src={user.img || '/default-avatar.png'} 
+        src={user.image || '/default-avatar.png'} 
         alt={`${user.name} profile`}
         className="w-5 h-5 rounded-full object-cover"
         width={20}
@@ -39,7 +42,7 @@ export default function Search() {
   const UserListItem = React.memo(({ user, isSelected, toggleUser }) => (
     <label className="flex items-center gap-2 p-2 hover:bg-zinc-800 cursor-pointer rounded-md group">
       <img
-        src={user.img || '/default-avatar.png'}
+        src={user.image || '/default-avatar.png'}
         alt={`${user.name} profile`}
         className="w-10 h-10 rounded-full object-cover"
         width={40}
@@ -66,13 +69,11 @@ export default function Search() {
     </label>
   ));
 
-  
   const filteredUsers = useMemo(() => {
     if (!Array.isArray(users)) return [];
     const searchLower = searchTerm.toLowerCase();
-    return users.filter((user) => user.name.toLowerCase().includes(searchLower));
+    return users.filter((user) => user.name && user.name.toLowerCase().includes(searchLower));
   }, [searchTerm, users]);
-
 
   const toggleUser = useCallback((user) => {
     setSelectedUsers((prev) =>
@@ -80,25 +81,22 @@ export default function Search() {
     );
   }, []);
 
-  // Handle chat button click
   const handleClick = () => {
-    if (selectedUsers.length === 0) return; // Prevent empty navigation
+    if (selectedUsers.length === 0) return;
     const value = encodeURIComponent(JSON.stringify(selectedUsers));
     router.push(`/messages?value=${value}`);
   };
 
   return (
-    <div className="z-40 w-96 bg-zinc-900 flex flex-col gap-2 rounded-md p-4 ">
+    <div className="z-40 w-96 bg-zinc-900 flex flex-col gap-2 rounded-md p-4">
       <h1 className="text-xl font-semibold text-white border-b border-b-zinc-700 pb-2">New Message</h1>
 
-      {/* Selected Users */}
       <div className="flex flex-wrap gap-2">
         {selectedUsers.map((user) => (
           <UserChip key={user.id} user={user} onRemove={() => toggleUser(user)} />
         ))}
       </div>
 
-      {/* Search Input */}
       <input
         type="text"
         placeholder="Search..."
@@ -108,11 +106,10 @@ export default function Search() {
         aria-label="Search users"
       />
 
-      {/* User List */}
       <div className="flex flex-col overflow-auto mt-2 max-h-[300px]">
-        {filteredUsers.map((user) => (
+        {filteredUsers.map((user,index) => (
           <UserListItem
-            key={user.id}
+            key={user.id?? index}
             user={user}
             isSelected={selectedUsers.some((u) => u.id === user.id)}
             toggleUser={() => toggleUser(user)}
@@ -121,7 +118,6 @@ export default function Search() {
         {filteredUsers.length === 0 && <p className="text-zinc-500 text-sm p-2">No users found</p>}
       </div>
 
-      {/* Chat Button */}
       <div className="flex justify-center">
         <button onClick={handleClick} className="p-2 pr-8 pl-8 rounded-md bg-blue-600">
           Chat

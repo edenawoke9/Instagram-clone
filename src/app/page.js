@@ -12,10 +12,10 @@ export default function Home() {
   useEffect(() => {
     async function fetchUsers(){
       const userData=await Users()
-      setUsers(userData)
+      setUsers(userData.slice(15,22))
       console.log(userData)
     }
-    fetchUsers
+    fetchUsers()
   }, []);
 
   return (
@@ -52,7 +52,7 @@ export default function Home() {
             {users.map((user, index) => (
               <div key={index} className="flex items-center justify-between mt-3">
                 <div className="flex items-center">
-                  <Image src={user.img} width={40} height={40} alt={user.name} className="rounded-full" />
+                  <Image src={user.image} width={40} height={40} alt={user.name} className="rounded-full" />
                   <div className="ml-3">
                     <p className="font-semibold text-sm flex items-center">
                       {user.name}
