@@ -9,7 +9,7 @@ import Typography from '@mui/joy/Typography';
 import { Heart, MessageCircle, Send, Bookmark } from 'lucide-react';
 import { Modal, Sheet, ModalClose } from '@mui/joy';
 import { Divider } from '@mui/material';
-import users from '../jsonfiles/user.json';
+import users from '../jsonfiles/user.js';
 import Image from 'next/image';
 import { useMemo } from 'react';
 import { Link } from 'lucide-react';

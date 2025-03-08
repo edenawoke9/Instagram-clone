@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import ImageList from '@mui/material/ImageList';
@@ -7,14 +8,15 @@ import MiniDrawer from '@/components/sidenav';
 
 export default function MasonryImageList() {
   return (
-    <div className='w-screen flex'>
+    <div className='w-screen  flex'>
       {/* SideNav with fixed width */}
       <MiniDrawer value="true"/>
      
      
 
       {/* Box takes the remaining space */}
-      <Box sx={{ flexGrow: 1, height: 450, overflowY: 'scroll' }} className="p-10 h-screen relative">
+      <Box sx={{ flexGrow: 1, height: "100vh", overflowY: "scroll" }} className="p-10 h-screen relative">
+
         <ImageList variant="masonry" cols={3} gap={8}>
           {itemData.map((item) => (
             <ImageListItem key={item.img}>
