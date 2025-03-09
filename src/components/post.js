@@ -11,7 +11,7 @@ export default function PostCard() {
     };
 
     return (
-        <div className="bg-black text-white max-w-md   overflow-hidden border-b border-gray-700 ">
+        <div className="bg-black text-white   overflow-hidden border-b border-gray-700 ">
             <div className="flex  p-4">
                 <Image src="/profile1.jpg" width={40} height={40} alt="Profile" className="rounded-full" />
                 <div className="ml-3 flex-1">

@@ -58,19 +58,20 @@ export default function Stories() {
   }, [stories, showStory]);
 
   return (
-    <div>
-      {/* Story List */}
-      <div className="p-4 rounded-md mb-4 overflow-auto flex flex-none max-w-[600px] gap-2 pr-6 pl-6">
+    <div className="  flex items-center">
+      
+      <div className="p-4 rounded-md overflow-scroll flex flex-none  items-center justify-center max-w-[600px] gap-2 pr-6 pl-6">
         {stories.map((story, index) => (
           <button key={index} onClick={() => handleClick(index)}>
-            <Image
+            <div className="h-full flex justify-center items-center"><Image
               src={story.image}
               width={100}
               height={100}
               alt="sth"
-              className={`rounded-full w-14 h-14 p-[2px] bg-gradient-to-r ${story.color}`}
-            />
-            <span>{story.name}</span>
+              className={`rounded-full w-14 h-14 p-[2px] flex   bg-gradient-to-r bg-pink-600`}
+            /></div>
+            
+            <span className="truncate">{story.name}</span>
           </button>
         ))}
       </div>
