@@ -49,11 +49,11 @@ const notifications = [
     },
   ];
 
-export default function Notifications() {
-  const [open, setOpen] = useState(true)
+export default function Notifications( {open,onClose}) {
+
 
   return (
-    <Dialog open={open} onClose={setOpen} className="relative z-50">
+    <Dialog open={open} onClose={onClose} className="relative z-50">
       <DialogBackdrop
         transition
         className=" text-white transition-opacity duration-500 ease-in-out data-closed:opacity-0"
@@ -65,13 +65,13 @@ export default function Notifications() {
           <div className="pointer-events-none fixed inset-y-0  flex max-w-full ">
             <DialogPanel
               transition
-              className="pointer-events-auto relative w-screen  max-w-md transform transition duration-500 ease-in-out data-closed:translate-x-full sm:duration-700"
+              className="pointer-events-auto bg-black relative w-screen  max-w-md transform transition duration-500 ease-in-out data-closed:translate-x-full sm:duration-700"
             >
-              <TransitionChild>
+              <TransitionChild >
                 <div className="absolute top-0 right-0 ml-8 flex pt-4 pr-2 duration-500 ease-in-out data-closed:opacity-0 sm:-ml-10 sm:pr-4">
                   <button
                     type="button"
-                    onClick={() => setOpen(false)}
+                    onClick={onClose}
                     className="relative rounded-md text-gray-300 hover:text-white focus:ring-2 focus:ring-white focus:outline-hidden"
                   >
                     <span className="absolute -inset-2.5" />
