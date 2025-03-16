@@ -11,26 +11,32 @@ export default function Home() {
 
   useEffect(() => {
     async function fetchUsers(){
-      const userData=await Users()
-      setUsers(userData.slice(15,22))
-      console.log(userData)
+      const userData = await Users();
+      setUsers(userData.slice(15, 22));
+      console.log(userData);
     }
-    fetchUsers()
+    fetchUsers();
   }, []);
 
   return (
-    <div className="bg-black text-white flex w-screen h-screen overflow-auto">
+    <div className="bg-black overflow-hidden text-white flex flex-col md:flex-row w-full min-h-screen">
+      {/* Sidenav - Hidden on small screens, visible on medium and larger screens */}
       <div className="hidden md:flex">
         <Sidenav value="true" />
       </div>
-      <div className="flex-1 flex p-6">
-        <div className="flex flex-col md:pr-20 md:pl-20">
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col lg:flex-row">
+        {/* Stories and Posts Section */}
+        <div className="flex flex-col w-full lg:w-auto items-center ">
           <Stories />
-          <div className="flex justify-center">
+          <div className="flex justify-center w-full">
             <PostCard />
           </div>
         </div>
-        <div className="flex-col flex-1 h-fit hidden lg:flex p-6 text-white">
+
+        {/* Profile and Suggestions Section - Hidden on small and medium screens, visible on large screens */}
+        <div className="flex-col w-full ml-10 lg:w-96 h-fit hidden lg:flex p-6 text-white">
           {/* Profile Section */}
           <div className="flex items-center justify-between">
             <div className="flex items-center">
@@ -52,7 +58,7 @@ export default function Home() {
             {users.map((user, index) => (
               <div key={index} className="flex items-center justify-between mt-3">
                 <div className="flex items-center">
-                  <Image src={user.image} width={40} height={40} alt={user.name} className="rounded-full" />
+                  <Image src={user.image} width={40} height={40} alt={user.name} className="rounded-full w-14 h-14 object-fit" />
                   <div className="ml-3">
                     <p className="font-semibold text-sm flex items-center">
                       {user.name}

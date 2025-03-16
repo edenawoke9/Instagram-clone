@@ -15,6 +15,7 @@ import Searchnav from '@/app/drawrers/search';
 import Notifications from '@/app/drawrers/notifications';
 import useEffect  from 'react';
 import "@fontsource/pacifico"; // Import for global use
+import Create from './create';
 
 const drawerWidth = 240;
 
@@ -64,6 +65,7 @@ export default function Sidenav({ value = false }) {
   const [open, setOpen] = useState(value);
   const [openNot, setOpenNot] = useState(false);
   const [openSearch, setOpenSearch] = useState(false);
+  const [openCreate,setOpenCreate]= useState(false)
 
   const navItems = [
     { icon: <Home />, label: "Home", href: "/" },
@@ -72,7 +74,7 @@ export default function Sidenav({ value = false }) {
     { icon: <Clapperboard />, label: "Reels", href: "/reels" },
     { icon: <Send />, label: "Messages", badge: "2", href: "/messages" },
     { icon: <Heart />, label: "Notifications", href: null, onClick: () => setOpenNot(true) },
-    { icon: <PlusSquare />, label: "Create", href: "/create" },
+    { icon: <PlusSquare />, label: "Create", href: null, onClick: ()=>setOpenCreate(true) },
     { icon: <User />, label: "Profile", href: "/profile" },
   ];
 
@@ -107,8 +109,9 @@ export default function Sidenav({ value = false }) {
         </Drawer>
       </div>
 
-      {openNot && <Notifications />}
-      {openSearch && <Searchnav />}
+      {openNot && <Notifications open={openNot} onClose={()=>setOpenNot(false)} />}
+      {openSearch && <Searchnav open={openSearch} onClose={()=>setOpenSearch(false)}/>}
+      {openCreate && <Create open={openCreate} onClose={()=>setOpenCreate(false)}/>}
     </>
   );
 }

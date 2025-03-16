@@ -15,7 +15,7 @@ export default function Login() {
       setLoading("Logging In...");
       setError("");
     
-      const formData = new FormData(event.currentTarget); // 'currentTarget' refers to the form itself
+      const formData = new FormData(event.currentTarget); 
       const email = formData.get("value");
       const password = formData.get("password");
     
@@ -32,7 +32,9 @@ export default function Login() {
         const status=false
     
         if (response.ok) {
+          
           document.cookie = "status=true; path=/";
+          localStorage.setItem()
           router.push("/");
         } else {
           console.error("API returned an error:", data);
