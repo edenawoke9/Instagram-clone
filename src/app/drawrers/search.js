@@ -14,7 +14,7 @@ import { useRouter } from 'next/navigation';
 const UserChip = ({ user, onRemove }) => (
     <div className="flex items-center gap-1 bg-zinc-800 text-white px-2 py-1 rounded-full">
         <img
-            src={user.image}
+            src={user.image||"/defaultUser.png"}
             alt={`${user.name} profile`}
             className="w-5 h-5 rounded-full object-cover"
             width={20}
@@ -35,7 +35,7 @@ const UserChip = ({ user, onRemove }) => (
 const UserListItem = React.memo(({ user, isSelected, toggleUser, onClick }) => (
     <button className="flex items-center gap-2 p-2 hover:bg-zinc-800 cursor-pointer rounded-md group" onClick={onClick}>
         <img
-            src={user.image}
+            src={user.image||"/defaultUser.png"}
             alt={`${user.name} profile`}
             className="w-10 h-10 rounded-full object-cover"
             width={40}

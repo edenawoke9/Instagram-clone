@@ -11,7 +11,7 @@ const notifications = [
       user: "abigail_tesfaye",
       action: "started following you.",
       time: "2w",
-      avatar: "/path-to-avatar1.jpg",
+       
       following: true,
     },
     {
@@ -19,7 +19,7 @@ const notifications = [
       user: "nahom_dereje",
       action: "started following you.",
       time: "2w",
-      avatar: "/path-to-avatar2.jpg",
+       
       following: false,
     },
     {
@@ -28,7 +28,7 @@ const notifications = [
       action: "mentioned you in a comment:",
       comment: "@blue_moon 🌟",
       time: "3w",
-      avatar: "/path-to-avatar3.jpg",
+       
       following: false,
     },
     {
@@ -36,7 +36,7 @@ const notifications = [
       user: "michael_solomon",
       action: "liked your comment: ❤️❤️",
       time: "3w",
-      avatar: "/path-to-avatar4.jpg",
+       
       following: false,
     },
     {
@@ -44,7 +44,7 @@ const notifications = [
       user: "seble_ayele",
       action: "started following you.",
       time: "3w",
-      avatar: "/path-to-avatar5.jpg",
+       
       following: true,
     },
   ];
@@ -90,7 +90,7 @@ export default function Notifications( {open,onClose}) {
           <div key={notif.id} className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <Image
-                src={notif.avatar}
+                src={ "/defaultUser.png"}
                 alt={notif.user}
                 width={40}
                 height={40}

@@ -2,18 +2,14 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Sidenav from '@/components/sidenav';
-// Profile data
-const profileData = {
-  username: '@L_ittl_e_wolf',
-  displayName: 'Eden Awoke',
-  followers: 184,
-  following: 127,
-  posts: 0,
-  bio: {
-    quote: 'Isaiah 40:31',
-    description: 'To the stars...'
-  },
-  profilePicture: '/like.png',}
+
+const profileData=JSON.parse(localStorage.getItem("user"))
+
+console.log(profileData)
+console.log(profileData.username)
+
+
+
 
 // Tab content components
 const TabContent = ({ activeTab }) => {
@@ -84,7 +80,7 @@ export default function Profile() {
           <div className="   px-2 bg-[#111] border border-gray-700 rounded-lg text-gray-400">Note...</div>
           <div className=' rounded-full m-4 '>
             <Image 
-              src={profileData.profilePicture} 
+              src={profileData.image||"/defaultUser.png"} 
               width={80} 
               height={80}
               alt="Profile picture" 
@@ -96,25 +92,25 @@ export default function Profile() {
           <div className="flex-col flex flex-wrap">
             <div className="flex flex-wrap justify-between items-center gap-2 md:gap-4 mb-4 text-center">
               <div className=" flex-1 flex gap-2 ">
-                <div className="font-bold text-lg md:text-xl">{profileData.posts}</div>
+                <div className="font-bold text-lg md:text-xl">0</div>
                 <div>posts</div>
               </div>
               <div className=" flex-1 flex gap-2">
-                <div className="font-bold text-lg md:text-xl">{profileData.followers}</div>
+                <div className="font-bold text-lg md:text-xl">0</div>
                 <div>followers</div>
               </div>
               <div className=" flex-1 flex gap-2">
-                <div className="font-bold text-lg md:text-xl">{profileData.following}</div>
+                <div className="font-bold text-lg md:text-xl">0</div>
                 <div>following</div>
               </div>
             </div>
             <div className="mb-6">
-          <h2 className="text-xl mb-2">{profileData.displayName}</h2>
+          <h2 className="text-xl mb-2">{profileData.name}</h2>
           <div className="flex items-center text-gray-400 mb-2">
-            <i className="fas fa-at mr-2"></i> {profileData.username}
+            <i className="fas fa-at mr-2"></i> <p>@</p>{profileData.username}
           </div>
-          <p className="text-gray-300 mb-2">{profileData.bio.quote}</p>
-          <p className="text-gray-300 mb-2">{profileData.bio.description}</p>
+          <p className="text-gray-300 mb-2">{profileData.bio}</p>
+          
         </div>
           </div>
         </div>

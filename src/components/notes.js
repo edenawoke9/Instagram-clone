@@ -14,7 +14,7 @@ export default function Note() {
         <div key={index} >
           <div className="flex flex-col">
             <textarea className="rounded-lg bg-gray-800 w-10 border-none z-20 text-sm -mb-4 text-center " placeholder="Note..."></textarea>
-            <Image src={user.image} width={100} height={100} alt={user.name} className="w-14 h-14 rounded-full" />
+            <Image src={user.image||"/defaultUser.png"} width={100} height={100} alt={user.name} className="w-14 h-14 rounded-full" />
             <p>{user.name}</p>
           </div>
         </div>

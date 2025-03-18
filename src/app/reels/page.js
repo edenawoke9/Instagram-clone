@@ -1,5 +1,5 @@
 'use client'
-import { useState,useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import MiniDrawer from '@/components/sidenav';
 import Box from '@mui/joy/Box';
 import Card from '@mui/joy/Card';
@@ -11,34 +11,25 @@ import { Modal, Sheet, ModalClose } from '@mui/joy';
 import { Divider } from '@mui/material';
 import Users from '../jsonfiles/user.js';
 import Image from 'next/image';
-import { useMemo } from 'react';
-import { Link } from 'lucide-react';
-const videos = [
-  {
-    src: 'https://assets.codepen.io/6093409/river.mp4',
-    owner: 'Eden Awoke',
-    followingstatus: 'true',
-    description: 'this is a mock video',
-    audio: 'song',
-  },
-  {
-    src: 'https://assets.codepen.io/6093409/river.mp4',
-    owner: 'Eden Awoke',
-    followingstatus: 'true',
-    description: 'this is a mock video',
-    audio: 'song',
-  },
-  {
-    src: 'https://assets.codepen.io/6093409/river.mp4',
-    owner: 'Eden Awoke',
-    followingstatus: 'true',
-    description: 'this is a mock video',
-    audio: 'song',
-  },
- 
-];
+import axios from 'axios';
 
 export default function Reels() {
+  const [reels, setReels] = useState([]);
+  const [error, setError] = useState("");
+  const id = parseInt(localStorage.getItem("userid"), 10);
+
+  useEffect(() => {
+    const fetchreels = async () => {
+      try {
+        const response = await axios.get(`/api/users/${id}/reels`);
+        setReels(response.data);
+      } catch (error) {
+        setError(error.message || "An error occurred while fetching data");
+      }
+    };
+    fetchreels();
+  }, [id]);
+
   const [openShare, setOpenShare] = useState(false);
 
   const handleOpenShare = () => setOpenShare(true);
@@ -48,13 +39,13 @@ export default function Reels() {
     <div className="flex min-h-screen">
       <MiniDrawer value="true" />
       <div className="flex flex-col gap-4 justify-center items-center flex-grow overflow-auto">
-        {videos.map((video, index) => (
+        {reels.map((reel, index) => (
           <div className="flex gap-2" key={index}>
             <Box
               component="ul"
               className="flex justify-center items-center w-[400px] h-screen p-0 m-auto"
             >
-              <Card component="li" className="w-[400px] min-w-[300px] h-screen">
+              <Card component="li" className="w-[400px] min-w-[300px] h-screen relative">
                 <CardCover>
                   <video
                     autoPlay
@@ -62,15 +53,34 @@ export default function Reels() {
                     muted
                     className="w-full h-full object-cover"
                   >
-                    <source src={video.src} type="video/mp4" />
+                    <source src={reel.image} type="video/mp4" />
                   </video>
                 </CardCover>
-                <CardContent>
-                  <Typography component="div" className="h-full flex flex-col justify-end text-white">
-                    <div>{video.owner} <span>{video.followingstatus ? "following" : "follow"}</span></div>
-                    <div>{video.description}</div>
-                    <div className="bg-black bg-opacity-20 w-fit pr-4 pl-4 rounded-sm">{video.audio}</div>
-                  </Typography>
+                <CardContent className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 p-4">
+                  <div className="flex flex-col justify-end h-full">
+                    {/* User Info */}
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center gap-2">
+                        <Image
+                          src={reel.user.image || '/defaultUser.png'}
+                          alt={reel.user.name}
+                          width={40}
+                          height={40}
+                          className="rounded-full"
+                        />
+                        <Typography className="text-white font-bold">
+                          {reel.user.name}
+                        </Typography>
+                        <button className="text-blue-500 text-sm">Follow</button>
+                      </div>
+                      <Typography className="text-white">
+                        {reel.description}
+                      </Typography>
+                      <div className="bg-black bg-opacity-20 w-fit pr-4 pl-4 rounded-sm text-white">
+                        {reel.audio}
+                      </div>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </Box>
@@ -90,11 +100,6 @@ export default function Reels() {
   );
 }
 
-
-
-
-
-
 function Share({ open, onClose }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState([]);
@@ -102,7 +107,7 @@ function Share({ open, onClose }) {
   useEffect(() => {
     async function fetchUsers() {
       try {
-        const response = await Users()
+        const response = await Users();
         setUsers(response);
       } catch (error) {
         console.error("Error loading users:", error);
@@ -111,7 +116,6 @@ function Share({ open, onClose }) {
     fetchUsers();
   }, []);
 
-  // Memoized search
   const filteredUsers = useMemo(() => {
     const searchLower = searchTerm.toLowerCase();
     return users.filter(user => user.name && user.name.toLowerCase().includes(searchLower));
@@ -147,7 +151,7 @@ function Share({ open, onClose }) {
           {filteredUsers.map((user, index) => (
             <div className="flex flex-col items-center" key={index}>
               <Image
-                src={user.image}
+                src={user.image || "/defaultUser.png"}
                 alt={user.name}
                 width={64}
                 height={64}
