@@ -4,13 +4,13 @@ import Box from '@mui/material/Box';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 
-import MiniDrawer from '@/components/sidenav';
+import SideNav from '@/components/sidenav';
 
 export default function MasonryImageList() {
   return (
     <div className='w-screen  flex'>
       {/* SideNav with fixed width */}
-      <MiniDrawer value="true"/>
+      <SideNav value="true"/>
      
      
 

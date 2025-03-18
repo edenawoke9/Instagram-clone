@@ -63,7 +63,7 @@ export default function Stories() {
           <button key={index} onClick={() => handleClick(index)} className="flex flex-col items-center">
             <div className="flex justify-center items-center">
               <Image
-                src={story.image}
+                src={story.image||"/defaultUser.png"}
                 width={100}
                 height={100}
                 alt="sth"

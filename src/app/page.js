@@ -58,7 +58,7 @@ export default function Home() {
             {users.map((user, index) => (
               <div key={index} className="flex items-center justify-between mt-3">
                 <div className="flex items-center">
-                  <Image src={user.image} width={40} height={40} alt={user.name} className="rounded-full w-14 h-14 object-fit" />
+                  <Image src={user.image || "defaultUser.png"} width={40} height={40} alt={user.name} className="rounded-full w-14 h-14 object-fit" />
                   <div className="ml-3">
                     <p className="font-semibold text-sm flex items-center">
                       {user.name}
