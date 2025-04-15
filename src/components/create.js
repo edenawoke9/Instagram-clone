@@ -38,20 +38,21 @@ export default function Create({ open, onClose }) {
       const fileUrl = imgbbResponse.data.data.url; // URL of the uploaded file
       const id = parseInt(localStorage.getItem("userId"), 10);
       const description = document.getElementById("description").value;
+      console.log(file)
 
       // Step 2: Send the file URL and description to your API
       const apiResponse = await axios.post(
-        "api/users/id/posts", // Replace with your API endpoint
+       `api/users/${id}/posts`, 
         {
-          file: fileUrl,
+          image: fileUrl,
           description: description,
-          isVideo: isVideo, // Include whether the file is a video
+          is_video: isVideo, 
         },
-        {
+       {
           headers: {
             "Content-Type": "application/json",
-          },
-        }
+          },}
+      
       );
 
       console.log("File uploaded and sent to API:", apiResponse.data);

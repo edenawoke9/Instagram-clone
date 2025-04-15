@@ -4,47 +4,137 @@ import Box from '@mui/material/Box';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 
-import SideNav from '@/components/sidenav';
 
-export default function MasonryImageList() {
+
+import { useState, useEffect } from "react"
+import Image from "next/image"
+import Link from "next/link"
+import axios from "axios"
+import { Search, Grid3X3, Film, Bookmark, Heart, MessageCircle } from "lucide-react"
+import Sidenav from "@/components/sidenav"
+import MobileNav from "@/components/mobileNav"
+
+export default function ExplorePage() {
+  const [itemData, setPosts] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [activeTab, setActiveTab] = useState("posts")
+
+  useEffect(() => {
+    const fetchData = async () => {
+        const response = await fetch("/api", {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+        });
+        const data = await response.json();
+        if (response.ok) {
+            console.log(data);
+            setPosts(data);
+        } else {
+            console.log("There is an error", data);
+        }
+    };
+    fetchData();
+}, []);
+
+
+ 
+
+  const handleSearch = async (e) => {
+    e.preventDefault()
+    if (!searchQuery.trim()) return
+
+    setLoading(true)
+    try {
+      const response = await axios.get(`/api/search?q=${searchQuery}`)
+      setPosts(response.data)
+    } catch (error) {
+      console.error("Error searching:", error)
+      // Filter sample data based on search query
+      const filteredPosts = Array(8)
+        .fill()
+        .map((_, index) => ({
+          id: index + 1,
+          image: `/placeholder.svg?height=${400 + (index % 3) * 100}&width=${400 + (index % 3) * 100}`,
+          likes: Math.floor(Math.random() * 10000),
+          comments: Math.floor(Math.random() * 500),
+          isVideo: index % 5 === 0,
+          user: {
+            username: `${searchQuery}_user_${index}`,
+            image: "/placeholder.svg?height=32&width=32",
+          },
+        }))
+      setPosts(filteredPosts)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
-    <div className='w-screen  flex'>
-      {/* SideNav with fixed width */}
-      <SideNav value="true"/>
-     
-     
+    <div className="bg-black  flex text-white">
+      <Sidenav />
 
-      {/* Box takes the remaining space */}
-      <Box sx={{ flexGrow: 1, height: "100vh", overflowY: "scroll" }} className="p-10 h-screen relative">
-
-        <ImageList variant="masonry" cols={3} gap={8}>
-          {itemData.map((item) => (
-            <ImageListItem key={item.img}>
-              <img
-                srcSet={`${item.img}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                src={`${item.img}?w=248&fit=crop&auto=format`}
-                alt={item.title}
-                loading="lazy"
+      <div className=" pb-16 md:pb-0">
+        <div className=" flex flex-col w-screen mx-auto px-4 py-6">
+          {/* Search bar */}
+          <form onSubmit={handleSearch} className="mb-6">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search"
+                className="w-full bg-zinc-900 rounded-lg py-3 pl-10 pr-4 focus:outline-none focus:ring-1 focus:ring-gray-500"
               />
-            </ImageListItem>
-          ))}
-        </ImageList>
-      </Box>
-    </div>
-  );
-}
+            </div>
+          </form>
 
-const itemData = [
-  { img: 'https://images.unsplash.com/photo-1549388604-817d15aa0110', title: 'Bed' },
-  { img: 'https://images.unsplash.com/photo-1525097487452-6278ff080c31', title: 'Books' },
-  { img: 'https://images.unsplash.com/photo-1523413651479-597eb2da0ad6', title: 'Sink' },
-  { img: 'https://images.unsplash.com/photo-1563298723-dcfebaa392e3', title: 'Kitchen' },
-  { img: 'https://images.unsplash.com/photo-1588436706487-9d55d73a39e3', title: 'Blinds' },
-  { img: 'https://images.unsplash.com/photo-1574180045827-681f8a1a9622', title: 'Chairs' },
-  { img: 'https://images.unsplash.com/photo-1530731141654-5993c3016c77', title: 'Laptop' },
-  { img: 'https://images.unsplash.com/photo-1481277542470-605612bd2d61', title: 'Doors' },
-  { img: 'https://images.unsplash.com/photo-1517487881594-2787fef5ebf7', title: 'Coffee' },
-  { img: 'https://images.unsplash.com/photo-1516455207990-7a41ce80f7ee', title: 'Storage' },
-  { img: 'https://images.unsplash.com/photo-1597262975002-c5c3b14bbd62', title: 'Candle' },
-  { img: 'https://images.unsplash.com/photo-1519710164239-da123dc03ef4', title: 'Coffee table' },
-];
+        
+          <div className="flex border-b border-zinc-800 mb-6">
+            <button
+              className={`flex items-center px-4 py-2 ${activeTab === "posts" ? "border-b-2 border-white" : ""}`}
+              onClick={() => setActiveTab("posts")}
+            >
+              <Grid3X3 size={16} className="mr-2" />
+              <span>Posts</span>
+            </button>
+            <button
+              className={`flex items-center px-4 py-2 ${activeTab === "videos" ? "border-b-2 border-white" : ""}`}
+              onClick={() => setActiveTab("videos")}
+            >
+              <Film size={16} className="mr-2" />
+              <span>Videos</span>
+            </button>
+            <button
+              className={`flex items-center px-4 py-2 ${activeTab === "saved" ? "border-b-2 border-white" : ""}`}
+              onClick={() => setActiveTab("saved")}
+            >
+              <Bookmark size={16} className="mr-2" />
+              <span>Saved</span>
+            </button>
+          </div>
+
+          
+          <Box sx={{ flexGrow: 1, height: "100vh", overflowY: "scroll" }} className="p-10 h-screen relative">
+
+<ImageList variant="masonry" cols={3} gap={8}>
+  {itemData.map((item) => (
+    <ImageListItem key={item.img}>
+      <img
+        srcSet={`${item.image}?w=248&fit=crop&auto=format&dpr=2 2x`}
+        src={`${item.image}?w=248&fit=crop&auto=format`}
+        alt={item.description}
+        loading="lazy"
+      />
+    </ImageListItem>
+  ))}
+</ImageList>
+</Box>
+        </div>
+      </div>
+
+      <MobileNav />
+    </div>
+  )
+}
