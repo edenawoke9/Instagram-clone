@@ -74,7 +74,7 @@ return (
                 width={60}
                 height={60}
                 alt={story.name}
-                className="rounded-full w-14 h-14 object-cover"
+                className="rounded-full w-14 h-14 object-fit"
               />
             </div>
           </div>
@@ -169,7 +169,7 @@ return (
             width={32}
             height={32}
             alt={users[activeIndex].name}
-            className="rounded-full border-2 border-white"
+            className="rounded-full w-14 h-14 object-fit border-2 border-white"
           />
           <span className="ml-2 text-white font-semibold">{users[activeIndex].name}</span>
           <span className="ml-2 text-gray-300 text-sm">1h</span>
