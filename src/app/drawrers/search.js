@@ -32,10 +32,13 @@ const UserChip = ({ user, onRemove }) => (
 );
 
 // Memoized UserListItem to prevent unnecessary re-renders
-const UserListItem = React.memo(({ user, isSelected, toggleUser, onClick }) => (
-    <button className="flex items-center gap-2 p-2 hover:bg-zinc-800 cursor-pointer rounded-md group" onClick={onClick}>
+const UserListItem = React.memo(({ user, onClick }) => (
+    <button
+        className="flex items-center gap-2 p-2 hover:bg-zinc-800 cursor-pointer rounded-md group"
+        onClick={() => onClick(user)}
+    >
         <img
-            src={user.image||"/defaultUser.png"}
+            src={user.image||"/default-avatar.png"}
             alt={`${user.name} profile`}
             className="w-10 h-10 rounded-full object-cover"
             width={40}
@@ -52,10 +55,9 @@ const UserListItem = React.memo(({ user, isSelected, toggleUser, onClick }) => (
 
 export default function Searchnav({open,onClose}) {
     const [users, setUsers] = useState([]);
-    const [selectedUsers, setSelectedUsers] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const router = useRouter();
-    
+
 
     // Fetch users on component mount
     useEffect(() => {
@@ -73,10 +75,22 @@ export default function Searchnav({open,onClose}) {
         fetchUsers();
     }, []);
 
-    // Handle search click
-    const handleSearchClick = () => {
-        router.push('/profile');
-    };
+    // Handle search click - redirect to the user's profile page
+    const handleSearchClick = useCallback((user) => {
+        if (!user) return;
+
+        // Close the search drawer
+        onClose();
+
+        // Redirect to the user's profile page
+        if (user.id) {
+            router.push(`/profile/${user.id}`);
+        } else {
+            // If no ID is available, just go to the profile page
+            // This will show the current user's profile
+            router.push('/profile');
+        }
+    }, [onClose, router]);
 
     // Memoize filtered users to prevent recalculating on every render
     const filteredUsers = useMemo(() => {
@@ -86,13 +100,8 @@ export default function Searchnav({open,onClose}) {
         );
     }, [searchTerm, users]);
 
-    // Memoize toggle function with useCallback
-    const toggleUser = useCallback((user) => {
-        setSelectedUsers(prev => prev.some(u => u.id === user.id)
-            ? prev.filter(u => u.id !== user.id)
-            : [...prev, user]
-        );
-    }, []);
+    // This function is no longer needed since we're not selecting users for chat
+    // but redirecting to profile pages instead
 
     return (
         <Dialog open={open} onClose={onClose} className="relative z-50">
@@ -142,8 +151,6 @@ export default function Searchnav({open,onClose}) {
                                                 <UserListItem
                                                     key={user.id}
                                                     user={user}
-                                                    isSelected={selectedUsers.some(u => u.id === user.id)}
-                                                    toggleUser={() => toggleUser(user)}
                                                     onClick={handleSearchClick}
                                                 />
                                             ))}

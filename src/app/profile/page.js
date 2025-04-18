@@ -24,9 +24,9 @@ export default function Profile() {
   useEffect(() => {
     // Client-side only access
     if (typeof window !== 'undefined') {
-     
+
       const userData = JSON.parse(localStorage.getItem("user") || {});
-     
+
       setId(userData.id);
       setProfileData(userData);
     }
@@ -94,8 +94,8 @@ export default function Profile() {
   const handleCreateComment = async (postId) => {
     if (!newComment.trim()) return;
     console.log("in the comment ",id)
-   
-  
+
+
     try {
       const response = await axios.post(`api/users/${id}/posts/${postId}/comments`, {
         body: newComment
@@ -146,13 +146,27 @@ export default function Profile() {
                 className="w-[150px] h-[150px] relative cursor-pointer"
                 onClick={() => setSelectedPost(post)}
               >
-                <Image
-                  src={post.image}
-                  alt="Post"
-                  width={400}
-                  height={400}
-                  className="object-fit mt-4 h-64 w-36 rounded-lg"
-                />
+                {post.is_video ? (
+                  <div className="relative w-full h-full">
+                    <video
+                      src={post.image}
+                      className="object-cover mt-4 h-64 w-36 rounded-lg"
+                      muted
+                    />
+                    {/* Video indicator icon */}
+                    <div className="absolute top-6 right-2 text-white">
+                      <i className="fas fa-video"></i>
+                    </div>
+                  </div>
+                ) : (
+                  <Image
+                    src={post.image}
+                    alt="Post"
+                    width={400}
+                    height={400}
+                    className="object-fit mt-4 h-64 w-36 rounded-lg"
+                  />
+                )}
               </div>
             ))}
           </div>
@@ -323,13 +337,22 @@ export default function Profile() {
           <div className="bg-zinc-800 rounded-lg max-w-[1000px] w-full max-h-[90vh] flex overflow-hidden">
             {/* Left side - Image */}
             <div className="w-[60%] flex-shrink-0 bg-black flex items-center justify-center">
-              <Image
-                src={selectedPost.image}
-                alt="Post"
-                width={600}
-                height={600}
-                className="object-contain max-h-[90vh] w-full"
-              />
+              {selectedPost.is_video ? (
+                <video
+                  src={selectedPost.image}
+                  controls
+                  autoPlay
+                  className="object-contain max-h-[90vh] w-full"
+                />
+              ) : (
+                <Image
+                  src={selectedPost.image}
+                  alt="Post"
+                  width={600}
+                  height={600}
+                  className="object-contain max-h-[90vh] w-full"
+                />
+              )}
             </div>
 
             {/* Right side - Comments and interaction */}

@@ -7,11 +7,32 @@ import Users from "./jsonfiles/user";
 import Sidenav from "@/components/sidenav";
 import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
+  const router = useRouter();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Check if user is authenticated
+  useEffect(() => {
+    // Check for authentication cookie
+    const checkAuth = () => {
+      const cookies = document.cookie.split(';');
+      const statusCookie = cookies.find(cookie => cookie.trim().startsWith('status='));
+      return !!statusCookie;
+    };
+
+    const isAuth = checkAuth();
+    setIsAuthenticated(isAuth);
+
+    // Redirect to login if not authenticated
+    if (!isAuth) {
+      router.push('/login');
+    }
+  }, [router]);
 
   useEffect(() => {
     async function fetchUsers() {
@@ -44,11 +65,45 @@ export default function Home() {
     visible: { y: 0, opacity: 1 }
   };
 
-  const userProfile = session?.user || {
+  const [userProfile, setUserProfile] = useState({
     name: "Eden Awoke",
     username: "l_ittl_e_wolf",
     image: "/profile1.jpg"
-  };
+  });
+
+  // Try to get the logged-in user from localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const userData = JSON.parse(localStorage.getItem("user") || '{}');
+        if (userData && Object.keys(userData).length > 0) {
+          setUserProfile({
+            name: userData.name || "Eden Awoke",
+            username: userData.username || "l_ittl_e_wolf",
+            image: userData.image || "/profile1.jpg"
+          });
+        } else if (session?.user) {
+          // Fallback to session if available
+          setUserProfile({
+            name: session.user.name || "Eden Awoke",
+            username: session.user.username || "l_ittl_e_wolf",
+            image: session.user.image || "/profile1.jpg"
+          });
+        }
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+      }
+    }
+  }, [session]);
+
+  // Show loading state or nothing while checking authentication
+  if (!isAuthenticated) {
+    return (
+      <div className="bg-black text-white flex items-center justify-center h-screen">
+        <div className="w-8 h-8 border-2 border-t-blue-500 border-r-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-black overflow-hidden text-white flex flex-col md:flex-row w-full min-h-screen">
@@ -79,7 +134,7 @@ export default function Home() {
             <div className="flex items-center">
               <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-pink-500 p-[2px]">
                 <Image
-                  src={userProfile.image}
+                  src={userProfile.image || "/profile1.jpg"}
                   width={56}
                   height={56}
                   alt="Profile"
@@ -124,7 +179,7 @@ export default function Home() {
                     <div className="relative">
                       <div className="w-12 h-12 rounded-full overflow-hidden">
                         <Image
-                          src={user.image || "/defaultUser.png"}
+                          src={user.image || "/profile1.jpg"}
                           width={48}
                           height={48}
                           alt={user.name}
@@ -182,7 +237,7 @@ export default function Home() {
         <button className="text-white text-xl">
           <div className="w-6 h-6 rounded-full overflow-hidden">
             <Image
-              src={userProfile.image}
+              src={userProfile.image || "/profile1.jpg"}
               width={24}
               height={24}
               alt="Profile"

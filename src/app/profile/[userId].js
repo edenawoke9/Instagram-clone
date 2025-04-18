@@ -183,12 +183,26 @@ export default function UserProfile() {
                 className="aspect-square relative cursor-pointer overflow-hidden"
                 onClick={() => setSelectedPost(post)}
               >
-                <Image
-                  src={post.image}
-                  alt="Post"
-                  fill
-                  className="object-cover hover:scale-105 transition-transform"
-                />
+                {post.is_video ? (
+                  <div className="relative w-full h-full">
+                    <video
+                      src={post.image}
+                      className="object-cover w-full h-full hover:scale-105 transition-transform"
+                      muted
+                    />
+                    {/* Video indicator icon */}
+                    <div className="absolute top-2 right-2 text-white bg-black/50 p-1 rounded-full">
+                      <i className="fas fa-video"></i>
+                    </div>
+                  </div>
+                ) : (
+                  <Image
+                    src={post.image}
+                    alt="Post"
+                    fill
+                    className="object-cover hover:scale-105 transition-transform"
+                  />
+                )}
               </div>
             ))}
           </div>
@@ -313,7 +327,7 @@ export default function UserProfile() {
           <div className="relative">
             <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-zinc-700">
               <Image
-                src={userProfile?.image || "/defaultUser.png"}
+                src={userProfile?.image || "/profile1.jpg"}
                 width={80}
                 height={80}
                 alt="Profile picture"
@@ -392,15 +406,24 @@ export default function UserProfile() {
       {selectedPost && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 z-50">
           <div className="bg-zinc-800 rounded-lg max-w-[1000px] w-full max-h-[90vh] flex overflow-hidden">
-            {/* Left side - Image */}
+            {/* Left side - Media (Image or Video) */}
             <div className="w-[60%] flex-shrink-0 bg-black flex items-center justify-center">
-              <Image
-                src={selectedPost.image}
-                alt="Post"
-                width={600}
-                height={600}
-                className="object-contain max-h-[90vh] w-full"
-              />
+              {selectedPost.is_video ? (
+                <video
+                  src={selectedPost.image}
+                  controls
+                  autoPlay
+                  className="object-contain max-h-[90vh] w-full"
+                />
+              ) : (
+                <Image
+                  src={selectedPost.image}
+                  alt="Post"
+                  width={600}
+                  height={600}
+                  className="object-contain max-h-[90vh] w-full"
+                />
+              )}
             </div>
 
             {/* Right side - Comments and interaction */}
@@ -409,7 +432,7 @@ export default function UserProfile() {
               <div className="flex items-center p-4 border-b border-zinc-700">
                 <div className="w-8 h-8 rounded-full overflow-hidden mr-3">
                   <Image
-                    src={userProfile?.image || "/defaultUser.png"}
+                    src={userProfile?.image || "/profile1.jpg"}
                     alt="Profile"
                     width={32}
                     height={32}
@@ -433,7 +456,7 @@ export default function UserProfile() {
                 <div className="flex mb-4">
                   <div className="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0">
                     <Image
-                      src={userProfile?.image || "/defaultUser.png"}
+                      src={userProfile?.image || "/profile1.jpg"}
                       alt="Profile"
                       width={32}
                       height={32}
@@ -459,7 +482,7 @@ export default function UserProfile() {
                     <div key={comment.id} className="flex mb-4 group">
                       <div className="w-8 h-8 rounded-full overflow-hidden mr-3 flex-shrink-0 bg-zinc-600">
                         <Image
-                          src={comment.user?.image || "/defaultUser.png"}
+                          src={comment.user?.image || "/profile1.jpg"}
                           alt="User"
                           width={32}
                           height={32}

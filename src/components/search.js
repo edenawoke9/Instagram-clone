@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { Check, X } from 'lucide-react';
-import Users from '../app/jsonfiles/user'; 
+import Users from '../app/jsonfiles/user';
 import Checkbox from '@mui/material/Checkbox';
 import { useRouter } from 'next/navigation';
 
@@ -22,7 +22,7 @@ export default function Search() {
   const UserChip = ({ user, onRemove }) => (
     <div className="flex items-center gap-1 bg-zinc-800 text-white px-2 py-1 rounded-full">
       <img
-        src={user.image || '/default-avatar.png'} 
+        src={user.image || '/default-avatar.png'}
         alt={`${user.name} profile`}
         className="w-5 h-5 rounded-full object-cover"
         width={20}
