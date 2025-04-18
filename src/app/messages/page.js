@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
-import { PhoneCallIcon as Call, Info, Send, Video, SearchIcon, Sidebar, Image as ImageIcon, Smile, Mic, PaperclipIcon } from "lucide-react"
+import { useState, useEffect, useRef, Suspense } from "react"
+import { PhoneCallIcon as Call, Info, Send, Video, SearchIcon, Image as ImageIcon, Smile, Mic, PaperclipIcon } from "lucide-react"
 import { useSearchParams, useRouter } from "next/navigation"
 import Search from "@/components/search"
 import Sidenav from "@/components/sidenav"
@@ -10,12 +10,12 @@ import Image from "next/image"
 const userList = [
   { id: 1, name: "Alice Johnson", image: "/defaultUser.png", lastMessage: "Hey, how are you?", time: "2h", unread: 2, isOnline: true },
   { id: 2, name: "Bob Smith", image: "/defaultUser.png", lastMessage: "Did you see the new post?", time: "1d", unread: 0, isOnline: false },
-
   { id: 5, name: "Eden Awoke", image: "/defaultUser.png", lastMessage: "Check out this video", time: "Just now", unread: 3, isOnline: true },
 ]
 
-export default function Message() {
+function MessagesContent() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [selectedUser, setSelectedUser] = useState(null)
   const [messages, setMessages] = useState([])
   const [inputMessage, setInputMessage] = useState("")
@@ -24,8 +24,8 @@ export default function Message() {
   const [showAttachments, setShowAttachments] = useState(false)
   const [isTyping, setIsTyping] = useState(false)
   const messagesEndRef = useRef(null)
-  const searchParams = useSearchParams()
 
+  // Rest of your component logic remains the same...
   // Check for user in URL parameters
   useEffect(() => {
     const value = searchParams.get("value")
@@ -42,11 +42,9 @@ export default function Message() {
   // Set Eden Awoke as default user if no user is selected from URL
   useEffect(() => {
     if (!selectedUser && !searchParams.get("value")) {
-      // Find Eden Awoke in the userList
       const edenAwoke = userList.find(user => user.name === "Eden Awoke")
       if (edenAwoke) {
         setSelectedUser(edenAwoke)
-        // Update URL to reflect the selected user
         router.push(`/messages?value=${encodeURIComponent(JSON.stringify(edenAwoke))}`)
       }
     }
@@ -60,7 +58,6 @@ export default function Message() {
   const handleSendMessage = (e) => {
     e.preventDefault()
     if (inputMessage.trim()) {
-      // Add user message
       setMessages([...messages, {
         id: Date.now(),
         text: inputMessage,
@@ -68,9 +65,7 @@ export default function Message() {
         timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
       }])
       setInputMessage("")
-
       setIsTyping(true)
-
 
       setTimeout(() => {
         setIsTyping(false)
@@ -86,14 +81,12 @@ export default function Message() {
 
   const handleAttachment = (type) => {
     setShowAttachments(false)
-
     const attachmentTypes = {
       image: "Sent an image",
       video: "Sent a video",
       audio: "Sent a voice message",
       file: "Sent a file"
     }
-
     setMessages([...messages, {
       id: Date.now(),
       text: attachmentTypes[type],
@@ -116,7 +109,6 @@ export default function Message() {
 
   return (
     <div className="relative flex h-screen bg-zinc-900 text-white">
-
       <Sidenav value={false}/>
 
       <div className="flex flex-col w-1/4 px-4 py-6 border-r border-zinc-700">
@@ -260,7 +252,6 @@ export default function Message() {
                   <PaperclipIcon size={20} />
                 </button>
 
-                {/* Attachment options popup */}
                 {showAttachments && (
                   <div className="absolute bottom-12 left-0 bg-zinc-800 rounded-lg shadow-lg p-2 flex flex-col space-y-2 border border-zinc-700">
                     <button
@@ -369,5 +360,17 @@ export default function Message() {
         )}
       </div>
     </div>
+  )
+}
+
+export default function MessagesPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex h-screen bg-zinc-900 text-white items-center justify-center">
+        <div className="animate-pulse">Loading messages...</div>
+      </div>
+    }>
+      <MessagesContent />
+    </Suspense>
   )
 }

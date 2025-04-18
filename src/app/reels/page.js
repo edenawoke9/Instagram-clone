@@ -1,4 +1,5 @@
 'use client'
+
 import { useState, useEffect, useMemo, useRef } from 'react';
 import SideNav from '@/components/sidenav';
 import Box from '@mui/joy/Box';
@@ -22,17 +23,26 @@ export default function Reels() {
   const [likes, setLikes] = useState({});
   const [saved, setSaved] = useState({});
   const [muted, setMuted] = useState(true);
+  const [userId, setUserId] = useState(null);
   const videoRefs = useRef([]);
-  const id = parseInt(localStorage.getItem("userid"), 10);
 
   useEffect(() => {
+    // Client-side only code
+    if (typeof window !== 'undefined') {
+      const id = parseInt(localStorage.getItem("userid"), 10);
+      setUserId(id);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!userId) return;
+
     const fetchreels = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`/api/users/${id}/reels`);
+        const response = await axios.get(`/api/users/${userId}/reels`);
         setReels(response.data);
 
-        // Initialize likes state
         const initialLikes = {};
         const initialSaved = {};
         response.data.forEach(reel => {
@@ -48,9 +58,8 @@ export default function Reels() {
       }
     };
     fetchreels();
-  }, [id]);
+  }, [userId]);
 
-  // Handle video visibility using IntersectionObserver
   useEffect(() => {
     if (!reels.length) return;
 
@@ -71,7 +80,7 @@ export default function Reels() {
             }
           });
         },
-        { threshold: 0.6 } // Play when 60% of the video is visible
+        { threshold: 0.6 }
       );
 
       observer.observe(ref);
@@ -103,8 +112,6 @@ export default function Reels() {
 
   const toggleMute = () => {
     setMuted(prev => !prev);
-
-    // Apply mute state to all videos
     videoRefs.current.forEach(ref => {
       if (ref) ref.muted = !muted;
     });
@@ -148,7 +155,6 @@ export default function Reels() {
     <div className="flex min-h-screen bg-black text-white">
       <SideNav value="true" />
 
-      {/* Mute/Unmute floating button */}
       <button
         className="fixed top-6 right-6 z-50 bg-black/50 p-2 rounded-full backdrop-blur-sm"
         onClick={toggleMute}
@@ -191,20 +197,16 @@ export default function Reels() {
                     </video>
                   </CardCover>
 
-                  {/* Progress bar */}
                   <div className="absolute top-0 left-0 right-0 h-1 bg-zinc-800">
                     <div className="h-full bg-gradient-to-r from-pink-500 to-purple-500 w-0 reel-progress"></div>
                   </div>
 
-                  {/* Top gradient overlay */}
                   <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-black/70 to-transparent pointer-events-none"></div>
 
                   <CardContent className="absolute bottom-0 left-0 right-0 p-4">
-                    {/* Bottom gradient overlay */}
                     <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-black/80 to-transparent pointer-events-none"></div>
 
                     <div className="flex flex-col justify-end h-full relative z-10">
-                      {/* User Info */}
                       <div className="flex flex-col gap-2">
                         <div className="flex items-center gap-2">
                           <div className="relative">
@@ -390,7 +392,6 @@ function Share({ open, onClose, reel }) {
                 <ModalClose color="neutral" />
               </div>
 
-              {/* Search box */}
               <div className="p-3 border-b border-zinc-700">
                 <div className="bg-zinc-900 rounded-lg px-3 py-2 flex items-center">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-zinc-400 mr-2">
@@ -408,7 +409,6 @@ function Share({ open, onClose, reel }) {
                 </div>
               </div>
 
-              {/* User list */}
               <div className="overflow-y-auto p-2" style={{ maxHeight: '50vh' }}>
                 {loading ? (
                   <div className="flex justify-center items-center p-8">
@@ -455,7 +455,6 @@ function Share({ open, onClose, reel }) {
                 )}
               </div>
 
-              {/* Message input area */}
               <div className="p-3 border-t border-zinc-700">
                 <textarea
                   className="w-full bg-zinc-900 text-white rounded-lg p-3 outline-none placeholder-zinc-500 text-sm resize-none h-20"
@@ -463,7 +462,6 @@ function Share({ open, onClose, reel }) {
                 ></textarea>
               </div>
 
-              {/* Send button */}
               <div className="p-3 border-t border-zinc-700">
                 <Button
                   color="primary"
@@ -483,32 +481,25 @@ function Share({ open, onClose, reel }) {
   );
 }
 
-// Add some custom CSS for animations
-const customStyles = `
-  @keyframes marquee {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-100%); }
-  }
-
-  .animate-marquee {
-    white-space: nowrap;
-    animation: marquee 10s linear infinite;
-  }
-
-  .reel-progress {
-    animation: progress 15s linear forwards;
-  }
-
-  @keyframes progress {
-    0% { width: 0; }
-    100% { width: 100%; }
-  }
-`;
-
-// Insert custom styles into document
+// Add style tag for animations
 if (typeof document !== 'undefined') {
-  const styleElement = document.createElement('style');
-  styleElement.type = 'text/css';
-  styleElement.appendChild(document.createTextNode(customStyles));
-  document.head.appendChild(styleElement);
+  const styleTag = document.createElement('style');
+  styleTag.innerHTML = `
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+    .animate-marquee {
+      white-space: nowrap;
+      animation: marquee 10s linear infinite;
+    }
+    .reel-progress {
+      animation: progress 15s linear forwards;
+    }
+    @keyframes progress {
+      0% { width: 0; }
+      100% { width: 100%; }
+    }
+  `;
+  document.head.appendChild(styleTag);
 }
