@@ -4,10 +4,10 @@ import Image from 'next/image';
 import Sidenav from '@/components/sidenav';
 import Create from '@/components/create';
 import axios from 'axios';
+import { FaPlus } from 'react-icons/fa';
 
 
-const profileData = JSON.parse(localStorage.getItem("user"));
-const id = parseInt(localStorage.getItem("userId"), 10);
+
 
 export default function Profile() {
   const [posts, setPosts] = useState([]);
@@ -18,6 +18,19 @@ export default function Profile() {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [loadingComments, setLoadingComments] = useState(false);
+  const [id, setId] = useState(null);
+  const [profileData, setProfileData] = useState({});
+
+  useEffect(() => {
+    // Client-side only access
+    if (typeof window !== 'undefined') {
+     
+      const userData = JSON.parse(localStorage.getItem("user") || {});
+     
+      setId(userData.id);
+      setProfileData(userData);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -80,11 +93,12 @@ export default function Profile() {
   // Handle comment creation
   const handleCreateComment = async (postId) => {
     if (!newComment.trim()) return;
-
+    console.log("in the comment ",id)
+   
+  
     try {
       const response = await axios.post(`api/users/${id}/posts/${postId}/comments`, {
-        content: newComment,
-        user_id: id
+        body: newComment
       }, {
         headers: {
           "Content-Type": "application/json",
@@ -125,26 +139,26 @@ export default function Profile() {
       if (posts.length > 0) {
         // If posts exist, display them in a flex row
         return (
-          <div className="flex justify-start flex-wrap gap-4">
+          <div className="flex justify-start w-full h-screen flex-wrap gap-4">
             {posts.map((post) => (
               <div
                 key={post.id}
                 className="w-[150px] h-[150px] relative cursor-pointer"
-                onClick={() => setSelectedPost(post)} // Open modal on post click
+                onClick={() => setSelectedPost(post)}
               >
                 <Image
                   src={post.image}
                   alt="Post"
                   width={400}
                   height={400}
-                  className="object-cover rounded-lg"
+                  className="object-fit mt-4 h-64 w-36 rounded-lg"
                 />
               </div>
             ))}
           </div>
         );
       } else {
-        // If no posts exist, show the "Create Post" section
+
         return (
           <>
             <div className="text-5xl mb-4 p-6 rounded-full border-2 border-gray-700">
@@ -266,31 +280,28 @@ export default function Profile() {
           className="mb-2 w-[60px] h-[60px] rounded-full bg-[#111] border border-gray-700 text-white flex items-center justify-center text-2xl cursor-pointer shadow-lg"
           onClick={() => closeCreate(true)}
         >
-          <i className="fas fa-plus"></i>
+          <FaPlus />
         </button>
 
         {/* Tabs */}
         <div className="flex justify-around border-t border-b border-gray-700 mb-6">
           <div
-            className={`py-4 flex-1 text-center cursor-pointer ${
-              activeTab === 'posts' ? 'border-b-2 border-white' : ''
-            }`}
+            className={`py-4 flex-1 text-center cursor-pointer ${activeTab === 'posts' ? 'border-b-2 border-white' : ''
+              }`}
             onClick={() => setActiveTab('posts')}
           >
             <i className="fas fa-th"></i> POSTS
           </div>
           <div
-            className={`py-4 flex-1 text-center cursor-pointer ${
-              activeTab === 'saved' ? 'border-b-2 border-white' : ''
-            }`}
+            className={`py-4 flex-1 text-center cursor-pointer ${activeTab === 'saved' ? 'border-b-2 border-white' : ''
+              }`}
             onClick={() => setActiveTab('saved')}
           >
             <i className="fas fa-bookmark"></i> SAVED
           </div>
           <div
-            className={`py-4 flex-1 text-center cursor-pointer ${
-              activeTab === 'tagged' ? 'border-b-2 border-white' : ''
-            }`}
+            className={`py-4 flex-1 text-center cursor-pointer ${activeTab === 'tagged' ? 'border-b-2 border-white' : ''
+              }`}
             onClick={() => setActiveTab('tagged')}
           >
             <i className="fas fa-tag"></i> TAGGED
@@ -444,18 +455,20 @@ export default function Profile() {
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   onKeyPress={(e) => {
-                    if (e.key === 'Enter') {
-                      handleCreateComment(selectedPost.id);
+                    if (e.key === 'Enter' && newComment.trim()) {
+                      handleCreateComment(selectedPost.id); // Remove id parameter here
                     }
                   }}
                 />
                 <button
-                  className={`text-blue-500 font-semibold ml-2 ${!newComment.trim() ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  onClick={() => handleCreateComment(selectedPost.id)}
+                  className={`text-blue-500 font-semibold ml-2 ${!newComment.trim() ? 'opacity-50 cursor-not-allowed' : ''
+                    }`}
+                  onClick={() => handleCreateComment(selectedPost.id)} // Remove id parameter here
                   disabled={!newComment.trim()}
                 >
                   Post
                 </button>
+
               </div>
 
               {/* Actions */}
