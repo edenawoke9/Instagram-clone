@@ -59,96 +59,111 @@ export default function Login() {
   }
 
   // SignUp Component
-  function SignUp() {
-    const [error, setError] = useState("");
-    const [loadingg, setLoadingg] = useState("Sign up");
+  // In the SignUp component, first add the bio input field
+function SignUp() {
+  const [error, setError] = useState("");
+  const [loadingg, setLoadingg] = useState("Sign up");
 
-    async function handleSignUp(event) {
-      event.preventDefault();
-      setLoadingg("Signing Up...");
-      setError("");
+  async function handleSignUp(event) {
+    event.preventDefault();
+    setLoadingg("Signing Up...");
+    setError("");
 
-      const formData = new FormData(event.currentTarget);
-      const email = formData.get("email");
-      const password = formData.get("password");
-      const name = formData.get("name");
-      const username = formData.get("username");
-      const bio=formData.get()
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get("email");
+    const password = formData.get("password");
+    const name = formData.get("name");
+    const username = formData.get("username");
+    const bio = formData.get("bio");
 
-      try {
-        const response = await axios.post(
-          "api/users",
-          { email, name, password, username },
-          { headers: { "Content-Type": "application/json" } }
-        );
+    try {
+      const response = await axios.post(
+        "api/users",
+        { email, name, password, username, bio },
+        { headers: { "Content-Type": "application/json" } }
+      );
 
-        const data = response.data;
-        const id = JSON.stringify(data.user_id);
+      const data = response.data;
+      const id = JSON.stringify(data.user_id);
+      const user = JSON.stringify(data.user);
 
-        if (response.status === 200) {
-          localStorage.setItem("userId", id);
-          document.cookie = "status=true; path=/";
-          router.push("/");
-        } else {
-          console.error("API returned an error:", data);
-          setError(data.message || "Sign up failed. Please check your inputs.");
-        }
-      } catch (error) {
-        console.error("Error during sign up:", error);
-        setError("An unexpected error occurred.");
-      } finally {
-        setLoadingg("Sign up");
+      if (response.status === 201) {
+        localStorage.setItem("userId", id);
+        localStorage.setItem("user", user);
+        document.cookie = "status=true; path=/";
+        router.push("/");
+      } else {
+        console.error("API returned an error:", data);
+        setError(data.message || "Sign up failed. Please check your inputs.");
       }
+    } catch (error) {
+      console.error("Error during sign up:", error);
+      setError(error.response?.data?.message || "An unexpected error occurred.");
+    } finally {
+      setLoadingg("Sign up");
     }
-
-    return (
-      <div>
-        <form onSubmit={handleSignUp}>
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            className="w-full p-2 mb-2 bg-gray-900 text-white border border-gray-700 rounded"
-          />
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            className="w-full p-2 mb-2 bg-gray-900 text-white border border-gray-700 rounded"
-          />
-          <input
-            type="text"
-            name="name"
-            placeholder="Full Name"
-            className="w-full p-2 mb-2 bg-gray-900 text-white border border-gray-700 rounded"
-          />
-          <input
-            type="text"
-            name="username"
-            placeholder="Username"
-            className="w-full p-2 mb-4 bg-gray-900 text-white border border-gray-700 rounded"
-          />
-          <p>{error}</p>
-          <button className="w-full bg-blue-500 text-white p-2 rounded font-bold" type="submit">
-            {loadingg}
-          </button>
-        </form>
-        <div className="text-center my-3 text-gray-400">OR</div>
-        <button className="w-full flex items-center justify-center bg-blue-700 text-white p-2 rounded">
-          Log in with Facebook
-        </button>
-        <p className="text-blue-400 text-center mt-4 cursor-pointer">
-          Forgot password?
-        </p>
-        <div className="text-center mt-6 text-gray-400">
-          Already have an account?{" "}
-          <span className="text-blue-400 cursor-pointer" onClick={toggleForm}>
-            Log In
-          </span>
-        </div>
-      </div>
-    );
   }
+
+  return (
+    <div>
+      <form onSubmit={handleSignUp}>
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          className="w-full p-2 mb-2 bg-gray-900 text-white border border-gray-700 rounded"
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          className="w-full p-2 mb-2 bg-gray-900 text-white border border-gray-700 rounded"
+          required
+        />
+        <input
+          type="text"
+          name="name"
+          placeholder="Full Name"
+          className="w-full p-2 mb-2 bg-gray-900 text-white border border-gray-700 rounded"
+          required
+        />
+        <input
+          type="text"
+          name="username"
+          placeholder="Username"
+          className="w-full p-2 mb-2 bg-gray-900 text-white border border-gray-700 rounded"
+          required
+        />
+        <textarea
+          name="bio"
+          placeholder="Bio (optional)"
+          className="w-full p-2 mb-4 bg-gray-900 text-white border border-gray-700 rounded resize-none h-24"
+        />
+        {error && <p className="text-red-500 mb-4">{error}</p>}
+        <button 
+          className="w-full bg-blue-500 text-white p-2 rounded font-bold hover:bg-blue-600 transition-colors" 
+          type="submit"
+        >
+          {loadingg}
+        </button>
+      </form>
+      <div className="text-center my-3 text-gray-400">OR</div>
+      <button className="w-full flex items-center justify-center bg-blue-700 text-white p-2 rounded hover:bg-blue-800 transition-colors">
+        Log in with Facebook
+      </button>
+      <p className="text-blue-400 text-center mt-4 cursor-pointer">
+        Forgot password?
+      </p>
+      <div className="text-center mt-6 text-gray-400">
+        Already have an account?{" "}
+        <span className="text-blue-400 cursor-pointer" onClick={toggleForm}>
+          Log In
+        </span>
+      </div>
+    </div>
+  );
+}
 
   return (
     <div className="bg-black flex flex-col justify-center items-center h-screen">
