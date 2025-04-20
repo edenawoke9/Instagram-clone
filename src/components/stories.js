@@ -15,7 +15,7 @@ function Stories() {
       setUsers(userData.slice(15,22));
     }
     fetchUsers();
-  }, [Users]);
+  }, []);
 
 function handleClick(index) {
   setShowStory(true)

@@ -263,7 +263,7 @@ function SignUp() {
                   Forgot password?
                 </p>
                 <div className="text-center mt-6 text-gray-400">
-                  Don't have an account?{" "}
+                  Don&apos;t have an account?{" "}
                   <span className="text-blue-400 cursor-pointer" onClick={toggleForm}>
                     Sign up
                   </span>

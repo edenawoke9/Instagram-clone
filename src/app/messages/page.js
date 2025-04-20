@@ -173,7 +173,9 @@ function MessagesContent() {
           <>
             <div className="text-white flex items-center justify-between p-4 border-b border-b-zinc-800">
               <div className="flex items-center space-x-3">
-                <img
+                <Image
+                width={100}
+                height={100}
                   src={selectedUser.image || "/placeholder.svg"}
                   alt={selectedUser.name}
                   className="w-10 h-10 rounded-full object-cover"

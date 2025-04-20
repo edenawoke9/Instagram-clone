@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from 'react';
+import { useEffect, useState,useCallback } from 'react';
 import Image from 'next/image';
 import Sidenav from '@/components/sidenav';
 import Create from '@/components/create';
@@ -56,24 +56,25 @@ export default function Profile() {
     if (selectedPost) {
       fetchComments(selectedPost.id);
     }
-  }, [selectedPost]);
+  }, [selectedPost,fetchComments]);
 
-  // Function to fetch comments for a post
-  const fetchComments = async (postId) => {
-    setLoadingComments(true);
-    try {
-      const response = await axios.get(`api/users/${id}/posts/${postId}/comments`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      setComments(response.data);
-    } catch (error) {
-      console.error("Failed to fetch comments:", error);
-    } finally {
-      setLoadingComments(false);
-    }
-  };
+  
+
+const fetchComments = useCallback(async (postId) => {
+  setLoadingComments(true);
+  try {
+    const response = await axios.get(`api/users/${id}/posts/${postId}/comments`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    setComments(response.data);
+  } catch (error) {
+    console.error("Failed to fetch comments:", error);
+  } finally {
+    setLoadingComments(false);
+  }
+}, [id]);
 
   // Handle post deletion
   const handleDeletePost = async (postId) => {
@@ -215,7 +216,7 @@ export default function Profile() {
           </div>
           <div className="text-2xl mb-4">Photos of you</div>
           <div className="text-gray-400 mb-6">
-            When people tag you in photos, they'll appear here.
+            When people tag you in photos, they&apos;ll appear here.
           </div>
         </>
       );

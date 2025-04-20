@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import MobileNav from "@/components/mobileNav";
 import { SessionProvider } from "next-auth/react";
+import Providers from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,9 +29,9 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SessionProvider>
+        <Providers>
           {children}
-        </SessionProvider>
+        </Providers>
         <div className="flex md:hidden"><MobileNav/></div>
       </body>
      

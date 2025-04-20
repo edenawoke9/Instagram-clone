@@ -8,7 +8,7 @@ import ImageListItem from '@mui/material/ImageListItem';
 
 import { useState, useEffect } from "react"
 import Image from "next/image"
-import Link from "next/link"
+
 import axios from "axios"
 import { Search, Grid3X3, Film, Bookmark, Heart, MessageCircle } from "lucide-react"
 import Sidenav from "@/components/sidenav"
@@ -121,9 +121,11 @@ export default function ExplorePage() {
 <ImageList variant="masonry" cols={3} gap={8}>
   {itemData.map((item) => (
     <ImageListItem key={item.img}>
-      <img
+      <Image
         srcSet={`${item.image}?w=248&fit=crop&auto=format&dpr=2 2x`}
         src={`${item.image}?w=248&fit=crop&auto=format`}
+        width={248}
+        height={248}
         alt={item.description}
         loading="lazy"
       />
